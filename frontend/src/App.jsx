@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer.jsx";
+import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import Home from "./pages/Home";
@@ -26,7 +26,11 @@ function AppLayout({ children }) {
   return (
     <>
       <Navbar />
-      <main>{children}</main>
+
+      <div className="app-content">
+        {children}
+      </div>
+
       <Footer />
     </>
   );
@@ -36,41 +40,69 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public pages */}
         <Route
           path="/"
-          element={<AppLayout><Home /></AppLayout>}
+          element={
+            <AppLayout>
+              <Home />
+            </AppLayout>
+          }
         />
 
         <Route
           path="/login"
-          element={<AppLayout><Login /></AppLayout>}
+          element={
+            <AppLayout>
+              <Login />
+            </AppLayout>
+          }
         />
 
         <Route
           path="/register"
-          element={<AppLayout><Register /></AppLayout>}
+          element={
+            <AppLayout>
+              <Register />
+            </AppLayout>
+          }
         />
 
         <Route
           path="/explore"
-          element={<AppLayout><ExploreIssues /></AppLayout>}
+          element={
+            <AppLayout>
+              <ExploreIssues />
+            </AppLayout>
+          }
         />
 
         <Route
           path="/explore/:id"
-          element={<AppLayout><ComplaintDetails /></AppLayout>}
+          element={
+            <AppLayout>
+              <ComplaintDetails />
+            </AppLayout>
+          }
         />
 
         <Route
           path="/leaderboard"
-          element={<AppLayout><Leaderboard /></AppLayout>}
+          element={
+            <AppLayout>
+              <Leaderboard />
+            </AppLayout>
+          }
         />
 
+        {/* Protected pages */}
         <Route
           path="/report-issue"
           element={
             <ProtectedRoute>
-              <AppLayout><ReportIssue /></AppLayout>
+              <AppLayout>
+                <ReportIssue />
+              </AppLayout>
             </ProtectedRoute>
           }
         />
@@ -79,7 +111,9 @@ export default function App() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <AppLayout><Dashboard /></AppLayout>
+              <AppLayout>
+                <Dashboard />
+              </AppLayout>
             </ProtectedRoute>
           }
         />
@@ -88,11 +122,14 @@ export default function App() {
           path="/admin"
           element={
             <ProtectedRoute>
-              <AppLayout><AdminDashboard /></AppLayout>
+              <AppLayout>
+                <AdminDashboard />
+              </AppLayout>
             </ProtectedRoute>
           }
         />
 
+        {/* Redirect unknown URLs */}
         <Route
           path="*"
           element={<Navigate to="/" replace />}
