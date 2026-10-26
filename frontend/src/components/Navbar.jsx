@@ -15,7 +15,7 @@ import {
 
 import "./Navbar.css";
 
-const text = {
+const translations = {
   en: {
     tagline: "Citizen Complaint Portal",
     langLabel: "Choose language",
@@ -67,7 +67,7 @@ export default function Navbar({
   user = null,
 }) {
   const currentLang = lang === "hi" ? "hi" : "en";
-  const t = text[currentLang];
+  const t = translations[currentLang];
 
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
@@ -78,13 +78,13 @@ export default function Navbar({
   }, [location.pathname]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) return undefined;
 
     const handleKeyDown = (event) => {
       if (event.key === "Escape") setOpen(false);
     };
 
-    const handleOutsideClick = (event) => {
+    const handlePointerDown = (event) => {
       if (
         menuRef.current &&
         !menuRef.current.contains(event.target)
@@ -94,28 +94,36 @@ export default function Navbar({
     };
 
     document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("pointerdown", handlePointerDown);
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener(
-        "mousedown",
-        handleOutsideClick
+        "pointerdown",
+        handlePointerDown
       );
     };
   }, [open]);
 
+  const changeLanguage = (nextLang) => {
+    onLangChange(nextLang);
+  };
+
   return (
     <header className="gn" lang={currentLang}>
       <div className="gn-tricolour" aria-hidden="true">
-        <i />
-        <i />
-        <i />
+        <span />
+        <span />
+        <span />
       </div>
 
       <nav className="gn-bar" aria-label="Main navigation">
-        {/* Brand and emblem */}
-        <Link to="/" className="gn-brand" aria-label="CivicSetu home">
+        <Link
+          to="/"
+          className="gn-brand"
+          aria-label="CivicSetu home"
+          onClick={() => setOpen(false)}
+        >
           <img
             className="gn-emblem"
             src="/civicsetu-emblem.png"
@@ -131,9 +139,7 @@ export default function Navbar({
           </span>
         </Link>
 
-        {/* Right-side controls */}
         <div className="gn-actions">
-          {/* A / अ language toggle */}
           <div
             className="gn-language"
             role="group"
@@ -145,7 +151,7 @@ export default function Navbar({
               aria-label={t.english}
               aria-pressed={currentLang === "en"}
               title={t.english}
-              onClick={() => onLangChange("en")}
+              onClick={() => changeLanguage("en")}
             >
               A
             </button>
@@ -156,23 +162,22 @@ export default function Navbar({
               aria-label={t.hindi}
               aria-pressed={currentLang === "hi"}
               title={t.hindi}
-              onClick={() => onLangChange("hi")}
+              onClick={() => changeLanguage("hi")}
             >
               अ
             </button>
           </div>
 
-          {/* Profile */}
           <Link
             to={user ? "/dashboard" : "/login"}
             className="gn-icon-btn"
             aria-label={t.profile}
             title={t.profile}
+            onClick={() => setOpen(false)}
           >
-            <User size={20} />
+            <User size={20} aria-hidden="true" />
           </Link>
 
-          {/* Navigation menu */}
           <div className="gn-menu-wrap" ref={menuRef}>
             <button
               type="button"
@@ -184,8 +189,16 @@ export default function Navbar({
               aria-label={open ? t.close : t.menu}
               onClick={() => setOpen((previous) => !previous)}
             >
-              <Menu size={20} className="gn-ico-menu" />
-              <X size={20} className="gn-ico-close" />
+              <Menu
+                size={21}
+                className="gn-ico-menu"
+                aria-hidden="true"
+              />
+              <X
+                size={21}
+                className="gn-ico-close"
+                aria-hidden="true"
+              />
             </button>
 
             <div
@@ -207,7 +220,7 @@ export default function Navbar({
                         isActive ? "is-active" : ""
                       }
                     >
-                      <Icon size={18} />
+                      <Icon size={18} aria-hidden="true" />
                       <span>{t.nav[key]}</span>
                     </NavLink>
                   </li>
