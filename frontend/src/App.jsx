@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import {
   BrowserRouter,
   Navigate,
@@ -22,10 +23,13 @@ import ComplaintDetails from "./pages/ComplaintDetails";
 
 import "./index.css";
 
-function AppLayout({ children }) {
+function AppLayout({ children, lang, onLangChange }) {
   return (
     <>
-      <Navbar />
+      <Navbar
+        lang={lang}
+        onLangChange={onLangChange}
+      />
 
       <div className="app-content">
         {children}
@@ -37,6 +41,13 @@ function AppLayout({ children }) {
 }
 
 export default function App() {
+  const [lang, setLang] = useState("en");
+
+  const layoutProps = {
+    lang,
+    onLangChange: setLang,
+  };
+
   return (
     <BrowserRouter>
       <Routes>
@@ -44,7 +55,7 @@ export default function App() {
         <Route
           path="/"
           element={
-            <AppLayout>
+            <AppLayout {...layoutProps}>
               <Home />
             </AppLayout>
           }
@@ -53,7 +64,7 @@ export default function App() {
         <Route
           path="/login"
           element={
-            <AppLayout>
+            <AppLayout {...layoutProps}>
               <Login />
             </AppLayout>
           }
@@ -62,7 +73,7 @@ export default function App() {
         <Route
           path="/register"
           element={
-            <AppLayout>
+            <AppLayout {...layoutProps}>
               <Register />
             </AppLayout>
           }
@@ -71,7 +82,7 @@ export default function App() {
         <Route
           path="/explore"
           element={
-            <AppLayout>
+            <AppLayout {...layoutProps}>
               <ExploreIssues />
             </AppLayout>
           }
@@ -80,7 +91,7 @@ export default function App() {
         <Route
           path="/explore/:id"
           element={
-            <AppLayout>
+            <AppLayout {...layoutProps}>
               <ComplaintDetails />
             </AppLayout>
           }
@@ -89,7 +100,7 @@ export default function App() {
         <Route
           path="/leaderboard"
           element={
-            <AppLayout>
+            <AppLayout {...layoutProps}>
               <Leaderboard />
             </AppLayout>
           }
@@ -100,7 +111,7 @@ export default function App() {
           path="/report-issue"
           element={
             <ProtectedRoute>
-              <AppLayout>
+              <AppLayout {...layoutProps}>
                 <ReportIssue />
               </AppLayout>
             </ProtectedRoute>
@@ -111,7 +122,7 @@ export default function App() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <AppLayout>
+              <AppLayout {...layoutProps}>
                 <Dashboard />
               </AppLayout>
             </ProtectedRoute>
@@ -122,7 +133,7 @@ export default function App() {
           path="/admin"
           element={
             <ProtectedRoute>
-              <AppLayout>
+              <AppLayout {...layoutProps}>
                 <AdminDashboard />
               </AppLayout>
             </ProtectedRoute>
