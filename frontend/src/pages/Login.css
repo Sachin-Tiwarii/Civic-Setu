@@ -1,154 +1,120 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&family=Noto+Serif:wght@600;700&display=swap");
 
-.login-page {
-  min-height: 75vh;
+.gl-page {
+  --navy: #12305a;
+  --navy-dark: #0b2244;
+  --saffron: #e8750f;
+  --saffron-dark: #c8620a;
+  --green: #138808;
+  --ink: #1d2a3a;
+  --muted: #536175;
+  --line: #d5dde8;
+  --tint: #eef3f9;
+
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 78vh;
   padding: 48px 20px;
-  background: #f5f7f6;
+  background: linear-gradient(180deg, #fff 0%, var(--tint) 100%);
+  color: var(--ink);
+  font-family: "Noto Sans", "Noto Sans Devanagari", system-ui, sans-serif;
+  line-height: 1.6;
 }
+.gl-page *, .gl-page *::before, .gl-page *::after { box-sizing: border-box; }
+.gl-page h1, .gl-page h2, .gl-page p, .gl-page ul { margin: 0; padding: 0; }
+.gl-page ul { list-style: none; }
+.gl-page a { text-decoration: none; }
 
-.login-card {
-  width: 100%;
-  max-width: 440px;
-  padding: 36px;
-  background: #fff;
-  border: 1px solid #e3e9e5;
-  border-radius: 20px;
-  box-shadow: 0 12px 40px rgba(25, 55, 39, 0.07);
-}
-
-.login-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #193d2b;
-  font-size: 20px;
-  font-weight: 750;
-  margin-bottom: 34px;
-}
-
-.login-logo {
-  width: 38px;
-  height: 38px;
+.gl-card {
   display: grid;
-  place-items: center;
-  border-radius: 12px;
-  background: #245a40;
-  color: white;
-  font-size: 21px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  width: 100%;
+  max-width: 900px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 18px 50px rgba(18, 48, 90, .13);
+  animation: gl-rise 650ms cubic-bezier(.2,.7,.2,1) both;
 }
+@keyframes gl-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 
-.login-eyebrow {
-  margin: 0 0 10px;
-  color: #527a63;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.7px;
-}
-
-.login-card h1 {
-  margin: 0;
-  color: #172c20;
-  font-size: clamp(28px, 5vw, 34px);
-  letter-spacing: -1px;
-}
-
-.login-subtitle {
-  margin: 12px 0 26px;
-  color: #6d786f;
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-.login-card form {
+/* Left info panel */
+.gl-panel {
+  position: relative;
   display: flex;
   flex-direction: column;
-}
-
-.login-card label {
-  margin: 15px 0 8px;
-  color: #263c2e;
-  font-size: 13px;
-  font-weight: 650;
-}
-
-.login-card input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 13px 14px;
-  border: 1px solid #dce4de;
-  border-radius: 10px;
-  outline: none;
-  background: #fff;
-  color: #172c20;
-  font: inherit;
-  font-size: 14px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.login-card input:focus {
-  border-color: #43815d;
-  box-shadow: 0 0 0 3px rgba(67, 129, 93, 0.12);
-}
-
-.login-card form button {
-  margin-top: 25px;
-  padding: 14px;
-  border: none;
-  border-radius: 10px;
-  background: #245a40;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 34px 32px 38px;
+  overflow: hidden;
+  background: var(--navy);
   color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
 }
+.gl-panel-wheel { position: absolute; right: -80px; bottom: -80px; width: 280px; color: #fff; opacity: .07; animation: gl-spin 90s linear infinite; pointer-events: none; }
+@keyframes gl-spin { to { transform: rotate(360deg); } }
+.gl-panel-brand { position: relative; display: inline-flex; align-items: center; gap: 10px; width: fit-content; color: #fff; font-family: "Noto Serif", Georgia, serif; font-size: 21px; font-weight: 700; }
+.gl-panel-body { position: relative; }
+.gl-panel-kicker { display: inline-block; padding-left: 10px; border-left: 3px solid var(--saffron); color: #ffd9b3; font-size: 13.5px; font-weight: 600; }
+.gl-panel h2 { margin: 12px 0 24px; font-family: "Noto Serif", Georgia, serif; font-size: 24px; font-weight: 700; line-height: 1.35; }
+.gl-panel li { display: flex; align-items: flex-start; gap: 12px; color: #dce6f4; font-size: 14.5px; line-height: 1.55; opacity: 0; animation: gl-slide 500ms ease both; }
+.gl-panel li + li { margin-top: 16px; }
+.gl-panel li:nth-child(1) { animation-delay: 350ms; }
+.gl-panel li:nth-child(2) { animation-delay: 450ms; }
+.gl-panel li:nth-child(3) { animation-delay: 550ms; }
+@keyframes gl-slide { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
+.gl-panel li span { display: grid; place-items: center; width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; background: rgba(255, 255, 255, .12); color: #ffb468; }
 
-.login-card form button:hover:not(:disabled) {
-  background: #193f2b;
-  transform: translateY(-1px);
+.gl-tricolour { position: absolute; left: 0; right: 0; bottom: 0; display: flex; height: 5px; }
+.gl-tricolour i { flex: 1; }
+.gl-tricolour i:nth-child(1) { background: var(--saffron); }
+.gl-tricolour i:nth-child(2) { background: #fff; }
+.gl-tricolour i:nth-child(3) { background: var(--green); }
+
+/* Form side */
+.gl-form-side { padding: 42px 40px 38px; }
+.gl-lock { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 18px; border-radius: 50%; background: #fdf0e3; color: var(--saffron-dark); }
+.gl-form-side h1 { font-family: "Noto Serif", Georgia, serif; font-size: clamp(22px, 3vw, 27px); font-weight: 700; line-height: 1.3; color: var(--navy-dark); }
+.gl-subtitle { margin: 8px 0 22px; color: var(--muted); font-size: 14.5px; }
+
+.gl-error { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; padding: 12px 14px; border: 1px solid #f0c4c0; border-left: 4px solid #b3382f; border-radius: 4px; background: #fdf0ef; color: #8f2a23; font-size: 14px; line-height: 1.5; animation: gl-shake 400ms ease; }
+.gl-error svg { flex-shrink: 0; margin-top: 2px; }
+@keyframes gl-shake { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+
+.gl-form-side form { display: flex; flex-direction: column; }
+.gl-form-side label { margin: 14px 0 7px; color: var(--navy-dark); font-size: 14px; font-weight: 600; }
+
+.gl-field { display: flex; align-items: center; gap: 10px; padding: 0 12px; border: 1.5px solid var(--line); border-radius: 4px; background: #fbfcfe; color: var(--muted); transition: border-color 160ms, box-shadow 160ms, background 160ms; }
+.gl-field:focus-within { border-color: var(--navy); background: #fff; box-shadow: 0 0 0 3px rgba(18, 48, 90, .12); color: var(--navy); }
+.gl-field input { flex: 1; width: 100%; min-width: 0; min-height: 48px; padding: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font: inherit; font-size: 15px; }
+.gl-field input::placeholder { color: #8d99aa; }
+.gl-eye { display: grid; place-items: center; width: 34px; height: 34px; margin-right: -6px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: var(--muted); cursor: pointer; transition: background 160ms, color 160ms; }
+.gl-eye:hover { background: var(--tint); color: var(--navy); }
+
+.gl-submit { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; margin-top: 26px; border: 0; border-radius: 4px; background: var(--saffron); color: #fff; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 180ms, box-shadow 180ms, transform 180ms; }
+.gl-submit:hover:not(:disabled) { background: var(--saffron-dark); box-shadow: 0 6px 16px rgba(200, 98, 10, .3); transform: translateY(-1px); }
+.gl-submit:disabled { opacity: .7; cursor: not-allowed; }
+.gl-spin { animation: gl-spin 1s linear infinite; }
+
+.gl-register { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14.5px; text-align: center; }
+.gl-register a { color: var(--navy); font-weight: 700; border-bottom: 2px solid var(--saffron); }
+.gl-register a:hover { color: var(--saffron-dark); }
+
+.gl-page a:focus-visible, .gl-page button:focus-visible { outline: 3px solid #2a6fd1; outline-offset: 2px; }
+
+@media (max-width: 800px) {
+  .gl-card { grid-template-columns: 1fr; max-width: 480px; }
+  .gl-panel { gap: 0; padding: 22px 24px 26px; }
+  .gl-panel-body { display: none; }
+  .gl-form-side { padding: 32px 26px 30px; }
 }
-
-.login-card form button:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-.login-error {
-  padding: 12px 14px;
-  border: 1px solid #f0caca;
-  border-radius: 10px;
-  background: #fff3f3;
-  color: #a52b2b;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.login-register {
-  margin: 25px 0 0;
-  color: #6d786f;
-  text-align: center;
-  font-size: 13px;
-}
-
-.login-register a {
-  color: #245a40;
-  font-weight: 750;
-  text-decoration: none;
-}
-
-.login-register a:hover {
-  text-decoration: underline;
-}
-
 @media (max-width: 480px) {
-  .login-page {
-    padding: 28px 14px;
-  }
-
-  .login-card {
-    padding: 26px 22px;
-  }
+  .gl-page { padding: 24px 12px; }
+  .gl-form-side { padding: 28px 20px 26px; }
 }
-    
+
+@media (prefers-reduced-motion: reduce) {
+  .gl-page *, .gl-page *::before, .gl-page *::after { animation: none !important; transition-duration: 0.01ms !important; }
+  .gl-panel li { opacity: 1; }
+} 
