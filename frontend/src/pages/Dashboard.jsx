@@ -351,18 +351,6 @@ function Dashboard() {
           follow-up.
         </p>
       </main>
-
-      <footer className="gov-footer">
-        <div className="gov-footer-inner">
-          <span>
-            <a href="/help">Help</a>
-            <a href="/privacy">Privacy Policy</a>
-            <a href="/terms">Terms of Use</a>
-            <a href="/accessibility">Accessibility Statement</a>
-          </span>
-          <span>© CivicSetu. Content owned and maintained by CivicSetu.</span>
-        </div>
-      </footer>
     </div>
   );
 }
