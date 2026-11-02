@@ -79,6 +79,7 @@
   background: transparent;
   padding: 0;
 }
+
 .civic-footer-brand-name {
   display: flex;
   flex-direction: column;
@@ -163,6 +164,8 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px 0;
+
+  /* Keep only one divider */
   border-top: 1px solid rgba(255, 255, 255, 0.18);
 
   display: flex;
@@ -177,11 +180,14 @@
   font-size: 11px;
 }
 
+/* Hindi tagline */
+
 .footer-tagline {
   color: #ffffff;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 /* Developer credit */
@@ -198,11 +204,14 @@
   flex-wrap: wrap;
   gap: 6px;
 
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  /* Removed extra horizontal line */
+  border-top: none;
 
   color: #aebed1;
   font-size: 12px;
 }
+
+/* Sachin hover animation */
 
 .footer-developer-link {
   display: inline-flex;
@@ -217,8 +226,6 @@
 
   transition: all 0.3s ease;
 }
-
-/* Sachin hover animation */
 
 .footer-developer-link::after {
   content: "";
@@ -307,9 +314,15 @@
     line-height: 1.8;
   }
 
+  .footer-tagline {
+    white-space: nowrap;
+  }
+
 }
 
-/* Small mobile */
+/* ======================================
+   SMALL MOBILE
+====================================== */
 
 @media (max-width: 380px) {
 
