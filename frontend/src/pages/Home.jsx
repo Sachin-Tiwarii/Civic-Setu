@@ -343,9 +343,6 @@ export default function Home({ lang = "en" }) {
             {t.ctaButton}
           </Link>
         </div>
-        <div className="gv-tricolour" aria-hidden="true">
-          <i /><i /><i />
-        </div>
       </section>
     </main>
   );
