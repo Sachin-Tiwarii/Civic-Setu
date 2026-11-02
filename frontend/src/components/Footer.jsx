@@ -1,7 +1,6 @@
 
 import { Link } from "react-router-dom";
 import {
-  ArrowUpRight,
   ExternalLink,
   ShieldCheck,
 } from "lucide-react";
@@ -76,26 +75,25 @@ export default function Footer() {
           All Rights Reserved.
         </p>
 
+        <div className="footer-developer">
+
+          <span>Designed & Developed with care by</span>
+
+          <a
+            href="https://sachin-tech.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-developer-link"
+          >
+            Sachin
+            <ExternalLink size={13} />
+          </a>
+
+        </div>
+
         <span className="footer-tagline">
           सेवा • सहभागिता • समाधान
         </span>
-
-      </div>
-
-      {/* Developer credit */}
-      <div className="footer-developer">
-
-        <span>Designed & Developed with care by</span>
-
-        <a
-          href="https://sachin-tech.vercel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="footer-developer-link"
-        >
-          Sachin
-          <ExternalLink size={13} />
-        </a>
 
       </div>
 
