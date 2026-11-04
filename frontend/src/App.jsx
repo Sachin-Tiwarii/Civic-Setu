@@ -34,12 +34,13 @@ function AppLayout({ children, lang, onLangChange }) {
         {children}
       </div>
 
-      <Footer />
+      <Footer lang={lang} />
     </>
   );
 }
 
 export default function App() {
+
   // Default language is English
   const [lang, setLang] = useState("en");
 
@@ -51,6 +52,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         {/* Public pages */}
         <Route
           path="/"
@@ -145,6 +147,7 @@ export default function App() {
           path="*"
           element={<Navigate to="/" replace />}
         />
+
       </Routes>
     </BrowserRouter>
   );
