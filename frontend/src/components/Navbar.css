@@ -1,7 +1,9 @@
 
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Serif:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Noto+Serif:wght@700&display=swap");
 
-/* ===== Navbar foundation ===== */
+/* ======================================
+   CIVICSETU NAVBAR FOUNDATION
+====================================== */
 
 .gn {
   --navy: #12305a;
@@ -17,10 +19,16 @@
   top: 0;
   z-index: 100;
   isolation: isolate;
+
   width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+
   background: #ffffff;
   border-bottom: 1px solid var(--line);
   box-shadow: 0 2px 10px rgba(18, 48, 90, 0.06);
+
   font-family: "Noto Sans", "Noto Sans Devanagari", sans-serif;
 }
 
@@ -47,7 +55,9 @@
   list-style: none;
 }
 
-/* ===== Tricolour strip ===== */
+/* ======================================
+   TRICOLOUR STRIP
+====================================== */
 
 .gn-tricolour {
   display: flex;
@@ -72,21 +82,27 @@
   background: var(--green);
 }
 
-/* ===== Main navigation ===== */
+/* ======================================
+   MAIN NAVIGATION
+====================================== */
 
 .gn-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+
   width: 100%;
-  max-width: 1440px;
+  max-width: 100%;
   min-height: 82px;
-  margin-inline: auto;
+
+  margin: 0;
   padding: 10px clamp(16px, 4vw, 48px);
 }
 
-/* ===== Brand and emblem ===== */
+/* ======================================
+   BRAND AND EMBLEM
+====================================== */
 
 .gn-brand {
   display: flex;
@@ -99,8 +115,10 @@
 .gn-emblem {
   display: block;
   flex: 0 0 auto;
+
   width: 49px;
   height: 62px;
+
   object-fit: contain;
   object-position: center;
   background: transparent;
@@ -136,7 +154,9 @@
   line-height: 1.4;
 }
 
-/* ===== Right-side controls ===== */
+/* ======================================
+   RIGHT SIDE CONTROLS
+====================================== */
 
 .gn-actions {
   display: flex;
@@ -147,66 +167,313 @@
   min-width: 0;
 }
 
-/* A / अ language selector */
+/* ======================================
+   LANGUAGE TOGGLE
+====================================== */
 
-.gn-language {
-  display: inline-flex;
+.gn-lang {
+  --w: 78px;
+  --h: 40px;
+  --pad: 3px;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
+
   flex: 0 0 auto;
-  gap: 3px;
-  padding: 4px;
+  width: var(--w);
+  height: var(--h);
+
+  padding: var(--pad);
   border: 1px solid var(--line);
-  border-radius: 9px;
-  background: var(--tint);
+  border-radius: 999px;
+
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    var(--tint) 100%
+  );
+
+  box-shadow: inset 0 1px 2px rgba(18, 48, 90, 0.08);
+
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  transition:
+    box-shadow 250ms ease,
+    transform 200ms ease,
+    border-color 250ms ease;
 }
 
-.gn-language button {
+.gn-lang:hover {
+  transform: translateY(-2px);
+  border-color: #b9c6d8;
+
+  box-shadow:
+    inset 0 1px 2px rgba(18, 48, 90, 0.08),
+    0 6px 14px rgba(18, 48, 90, 0.16);
+}
+
+.gn-lang:active {
+  transform: scale(0.95);
+}
+
+.gn-lang:focus-visible {
+  outline: 3px solid #2a6fd1;
+  outline-offset: 3px;
+}
+
+/* Sliding thumb */
+
+.gn-lang-thumb {
+  position: absolute;
+  top: var(--pad);
+  bottom: var(--pad);
+  left: var(--pad);
+
+  width: calc(50% - var(--pad));
+  border-radius: 999px;
+
+  box-shadow: 0 3px 8px rgba(18, 48, 90, 0.3);
+
+  transition:
+    left 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  overflow: visible;
+}
+
+.gn-lang.is-english .gn-lang-thumb {
+  left: 50%;
+}
+
+/* Gradient layers */
+
+.gn-lang-thumb::before,
+.gn-lang-thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transition: opacity 350ms ease;
+}
+
+.gn-lang-thumb::before {
+  background: linear-gradient(
+    135deg,
+    #ff9a3c,
+    var(--saffron)
+  );
+  opacity: 0;
+}
+
+.gn-lang-thumb::after {
+  background: linear-gradient(
+    135deg,
+    #2a5a9a,
+    var(--navy-dark)
+  );
+  opacity: 0;
+}
+
+.gn-lang.is-hindi .gn-lang-thumb::before {
+  opacity: 1;
+}
+
+.gn-lang.is-english .gn-lang-thumb::after {
+  opacity: 1;
+}
+
+/* Glossy shine */
+
+.gn-lang-thumb {
+  background-image: linear-gradient(
+    120deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 65%
+  );
+
+  background-size: 250% 100%;
+  background-position: 120% 0;
+}
+
+.gn-lang:hover .gn-lang-thumb {
+  animation: gnLangShine 900ms ease;
+}
+
+/* Ring pulse */
+
+.gn-lang-burst {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  border-radius: 999px;
+  border: 2px solid currentColor;
+
+  opacity: 0;
+  pointer-events: none;
+
+  animation: gnLangBurst 600ms ease-out;
+}
+
+.gn-lang.is-hindi .gn-lang-burst {
+  color: var(--saffron);
+}
+
+.gn-lang.is-english .gn-lang-burst {
+  color: var(--navy);
+}
+
+/* Language letters */
+
+.gn-lang-opt {
+  position: relative;
+  z-index: 2;
+
   display: grid;
   place-items: center;
-  min-width: 36px;
-  height: 34px;
-  padding: 0 8px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
+
+  height: 100%;
+
   color: var(--muted);
   font-family: "Noto Sans", "Noto Sans Devanagari", sans-serif;
   font-size: 16px;
   font-weight: 700;
   line-height: 1;
-  cursor: pointer;
-  transition: background-color 180ms ease, color 180ms ease,
-    box-shadow 180ms ease;
+
+  transition:
+    color 300ms ease,
+    transform 300ms ease;
 }
 
-.gn-language button:hover:not(.is-selected) {
-  background: #ffffff;
-  color: var(--navy);
+.gn-lang-opt-hi {
+  font-family: "Noto Sans Devanagari", sans-serif;
+  font-size: 18px;
 }
 
-.gn-language button.is-selected {
-  background: var(--navy);
+.gn-lang.is-hindi .gn-lang-opt-hi,
+.gn-lang.is-english .gn-lang-opt-en {
   color: #ffffff;
-  box-shadow: 0 2px 6px rgba(18, 48, 90, 0.2);
 }
 
-/* Profile and menu buttons */
+.gn-lang.is-hindi .gn-lang-opt-hi,
+.gn-lang.is-english .gn-lang-opt-en {
+  animation: gnLangPop 520ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Thumb stretch */
+
+.gn-lang.is-english .gn-lang-thumb {
+  transform-origin: left center;
+  animation: gnLangStretchRight 420ms ease;
+}
+
+.gn-lang.is-hindi .gn-lang-thumb {
+  transform-origin: right center;
+  animation: gnLangStretchLeft 420ms ease;
+}
+
+/* ======================================
+   LANGUAGE ANIMATIONS
+====================================== */
+
+@keyframes gnLangStretchRight {
+  0% {
+    transform: scaleX(1);
+  }
+
+  40% {
+    transform: scaleX(1.35);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes gnLangStretchLeft {
+  0% {
+    transform: scaleX(1);
+  }
+
+  40% {
+    transform: scaleX(1.35);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes gnLangPop {
+  0% {
+    transform: scale(0.5) rotate(-18deg);
+    opacity: 0.2;
+  }
+
+  60% {
+    transform: scale(1.25) rotate(6deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes gnLangBurst {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: scale(1.9, 1.7);
+    opacity: 0;
+  }
+}
+
+@keyframes gnLangShine {
+  from {
+    background-position: 120% 0;
+  }
+
+  to {
+    background-position: -40% 0;
+  }
+}
+
+/* ======================================
+   PROFILE AND MENU BUTTONS
+====================================== */
 
 .gn-icon-btn {
   position: relative;
+
   display: grid;
   place-items: center;
+
   flex: 0 0 auto;
   width: 43px;
   height: 43px;
+
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
+
   background: #ffffff;
   color: var(--navy);
+
   cursor: pointer;
-  transition: background-color 180ms ease, color 180ms ease,
-    border-color 180ms ease, transform 180ms ease;
+
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
 }
 
 .gn-icon-btn:hover {
@@ -219,7 +486,9 @@
   transform: scale(0.96);
 }
 
-/* ===== Hamburger animation ===== */
+/* ======================================
+   HAMBURGER ANIMATION
+====================================== */
 
 .gn-menu-wrap {
   position: relative;
@@ -228,7 +497,10 @@
 
 .gn-burger svg {
   position: absolute;
-  transition: transform 220ms ease, opacity 180ms ease;
+
+  transition:
+    transform 220ms ease,
+    opacity 180ms ease;
 }
 
 .gn-ico-menu {
@@ -257,30 +529,41 @@
   color: #ffffff;
 }
 
-/* ===== Dropdown menu ===== */
+/* ======================================
+   DROPDOWN MENU
+====================================== */
 
 .gn-menu {
   position: absolute;
   top: calc(100% + 12px);
   right: 0;
   z-index: 110;
+
   width: 280px;
   max-width: calc(100vw - 24px);
   max-height: min(75vh, 520px);
+
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
+
   border: 1px solid var(--line);
   border-top: 4px solid var(--saffron);
   border-radius: 9px;
+
   background: #ffffff;
   box-shadow: 0 16px 40px rgba(18, 48, 90, 0.18);
+
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+
   transform: translateY(-8px) scale(0.98);
   transform-origin: top right;
-  transition: opacity 180ms ease, transform 180ms ease,
+
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
     visibility 0s linear 180ms;
 }
 
@@ -288,13 +571,16 @@
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+
   transform: translateY(0) scale(1);
   transition-delay: 0s;
 }
 
 .gn-menu-title {
   padding: 15px 18px 12px;
+
   border-bottom: 1px solid var(--line);
+
   color: var(--muted);
   font-size: 13px;
   font-weight: 700;
@@ -315,7 +601,11 @@
 .gn-menu.is-open li {
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 220ms ease, transform 220ms ease;
+
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+
   transition-delay: calc(35ms + var(--i) * 30ms);
 }
 
@@ -323,16 +613,24 @@
   display: flex;
   align-items: center;
   gap: 12px;
+
   width: 100%;
   min-height: 45px;
+
   padding: 11px 12px;
+
   border-left: 3px solid transparent;
   border-radius: 5px;
+
   color: var(--ink);
   font-size: 14px;
   font-weight: 500;
+
   overflow-wrap: anywhere;
-  transition: background-color 150ms ease, color 150ms ease,
+
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
     border-color 150ms ease;
 }
 
@@ -353,7 +651,9 @@
   font-weight: 700;
 }
 
-/* ===== Keyboard focus ===== */
+/* ======================================
+   KEYBOARD FOCUS
+====================================== */
 
 .gn a:focus-visible,
 .gn button:focus-visible {
@@ -361,7 +661,9 @@
   outline-offset: 3px;
 }
 
-/* ===== Tablet ===== */
+/* ======================================
+   TABLET RESPONSIVE
+====================================== */
 
 @media (max-width: 768px) {
   .gn-bar {
@@ -395,9 +697,16 @@
     width: 40px;
     height: 40px;
   }
+
+  .gn-lang {
+    --w: 70px;
+    --h: 38px;
+  }
 }
 
-/* ===== Mobile ===== */
+/* ======================================
+   MOBILE RESPONSIVE
+====================================== */
 
 @media (max-width: 520px) {
   .gn-bar {
@@ -434,17 +743,18 @@
     gap: 5px;
   }
 
-  .gn-language {
-    gap: 2px;
-    padding: 3px;
-    border-radius: 7px;
+  .gn-lang {
+    --w: 62px;
+    --h: 34px;
+    --pad: 2px;
   }
 
-  .gn-language button {
-    min-width: 27px;
-    height: 30px;
-    padding: 0 5px;
+  .gn-lang-opt {
     font-size: 14px;
+  }
+
+  .gn-lang-opt-hi {
+    font-size: 15px;
   }
 
   .gn-icon-btn {
@@ -464,7 +774,9 @@
   }
 }
 
-/* ===== Very narrow phones ===== */
+/* ======================================
+   VERY NARROW PHONES
+====================================== */
 
 @media (max-width: 360px) {
   .gn-bar {
@@ -497,14 +809,9 @@
     gap: 4px;
   }
 
-  .gn-language {
-    padding: 2px;
-  }
-
-  .gn-language button {
-    min-width: 24px;
-    height: 29px;
-    padding-inline: 3px;
+  .gn-lang {
+    --w: 56px;
+    --h: 32px;
   }
 
   .gn-icon-btn {
@@ -518,7 +825,9 @@
   }
 }
 
-/* ===== Reduced motion accessibility ===== */
+/* ======================================
+   REDUCED MOTION ACCESSIBILITY
+====================================== */
 
 @media (prefers-reduced-motion: reduce) {
   .gn *,
