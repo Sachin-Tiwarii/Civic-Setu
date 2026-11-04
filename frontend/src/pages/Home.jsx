@@ -64,11 +64,8 @@ const translations = {
       { icon: "bell", title: "Complaint is registered", text: "Find your submitted complaint in your dashboard." },
       { icon: "check", title: "Track the progress", text: "Check the status as your complaint progresses." },
     ],
-    ctaHeading: "Let's make our neighbourhood better.",
-    ctaDescription:
-      "Your report helps bring local problems to attention and supports better communities.",
-    ctaButton: "Report a problem",
   },
+
   hi: {
     tickerLabel: "सूचना",
     notices: [
@@ -130,10 +127,6 @@ const translations = {
       { icon: "bell", title: "शिकायत दर्ज होगी", text: "अपनी जमा की गई शिकायत डैशबोर्ड पर देखें।" },
       { icon: "check", title: "प्रगति देखें", text: "शिकायत की स्थिति में होने वाले बदलाव देखें।" },
     ],
-    ctaHeading: "आइए, अपने क्षेत्र को बेहतर बनाएँ।",
-    ctaDescription:
-      "आपकी शिकायत स्थानीय समस्याओं को सामने लाने और बेहतर समुदाय बनाने में मदद करती है।",
-    ctaButton: "समस्या दर्ज करें",
   },
 };
 
@@ -189,19 +182,21 @@ function Chakra() {
 }
 
 export default function Home({ lang = "en" }) {
-  const t = translations[lang] || translations.en;
+  const currentLang = lang === "hi" ? "hi" : "en";
+  const t = translations[currentLang];
 
   return (
-    <main className={`gv-page ${lang === "hi" ? "gv-hindi-page" : ""}`} id="main-content">
-      <div className="gv-tricolour" aria-hidden="true">
-        <i /><i /><i />
-      </div>
-
+    <main
+      className={`gv-page ${currentLang === "hi" ? "gv-hindi-page" : ""}`}
+      id="main-content"
+      lang={currentLang}
+    >
       <div className="gv-ticker" role="status">
         <span className="gv-ticker-tag">
           <Icon name="bell" size={15} />
           {t.tickerLabel}
         </span>
+
         <div className="gv-ticker-track">
           <div className="gv-ticker-move">
             {[...t.notices, ...t.notices].map((notice, i) => (
@@ -213,6 +208,7 @@ export default function Home({ lang = "en" }) {
 
       <section className="gv-hero">
         <Chakra />
+
         <div className="gv-wrap gv-hero-grid">
           <div className="gv-hero-copy">
             <p className="gv-hindi">{t.eyebrow}</p>
@@ -224,6 +220,7 @@ export default function Home({ lang = "en" }) {
                 <Icon name="file" size={19} />
                 {t.report}
               </Link>
+
               <Link to="/explore" className="gv-btn gv-btn-outline">
                 <Icon name="map" size={19} />
                 {t.explore}
@@ -233,6 +230,7 @@ export default function Home({ lang = "en" }) {
 
           <aside className="gv-panel" aria-label={t.quick}>
             <h2>{t.quick}</h2>
+
             <ul>
               {t.actions.map((action) => (
                 <li key={action.title}>
@@ -240,10 +238,12 @@ export default function Home({ lang = "en" }) {
                     <span className="gv-panel-icon">
                       <Icon name={action.icon} size={23} />
                     </span>
+
                     <span className="gv-panel-text">
                       <strong>{action.title}</strong>
                       <small>{action.cta}</small>
                     </span>
+
                     <Icon name="arrow" size={19} className="gv-panel-arrow" />
                   </Link>
                 </li>
@@ -266,8 +266,10 @@ export default function Home({ lang = "en" }) {
                 <span className="gv-action-icon">
                   <Icon name={action.icon} size={27} />
                 </span>
+
                 <h3>{action.title}</h3>
                 <p>{action.text}</p>
+
                 <Link to={action.link} className="gv-link">
                   {action.cta}
                   <Icon name="arrow" size={17} />
@@ -291,6 +293,7 @@ export default function Home({ lang = "en" }) {
                 <span className="gv-service-icon">
                   <Icon name={service.icon} size={26} />
                 </span>
+
                 <div>
                   <h3>{service.title}</h3>
                   <p>{service.text}</p>
@@ -306,6 +309,7 @@ export default function Home({ lang = "en" }) {
           <header className="gv-heading gv-heading-left">
             <h2>{t.howHeading}</h2>
             <p>{t.howDescription}</p>
+
             <Link to="/report-issue" className="gv-btn gv-btn-navy">
               {t.getStarted}
               <Icon name="arrow" size={18} />
@@ -316,9 +320,11 @@ export default function Home({ lang = "en" }) {
             {t.steps.map((step, i) => (
               <li key={step.title}>
                 <span className="gv-step-badge">{i + 1}</span>
+
                 <span className="gv-step-icon">
                   <Icon name={step.icon} size={22} />
                 </span>
+
                 <div>
                   <h3>{step.title}</h3>
                   <p>{step.text}</p>
@@ -326,22 +332,6 @@ export default function Home({ lang = "en" }) {
               </li>
             ))}
           </ol>
-        </div>
-      </section>
-
-      <section className="gv-cta">
-        <div className="gv-wrap gv-cta-inner">
-          <span className="gv-cta-icon">
-            <Icon name="users" size={34} />
-          </span>
-          <div className="gv-cta-copy">
-            <h2>{t.ctaHeading}</h2>
-            <p>{t.ctaDescription}</p>
-          </div>
-          <Link to="/report-issue" className="gv-btn gv-btn-saffron">
-            <Icon name="file" size={19} />
-            {t.ctaButton}
-          </Link>
         </div>
       </section>
     </main>
