@@ -1,6 +1,28 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Noto+Serif:wght@600;700;800&display=swap");
 
+/* ======================================
+   PAGE FOUNDATION + HORIZONTAL OVERFLOW FIX
+====================================== */
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+#root {
+  overflow-x: clip;
+}
+
 .gv-page {
   --navy: #12305a;
   --navy-dark: #0b2244;
@@ -14,15 +36,16 @@
   --tint: #eef3f9;
   --white: #fff;
 
+  position: relative;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  overflow: clip;
+  overflow-x: clip;
   background: var(--bg);
   color: var(--ink);
   font-family: "Noto Sans", system-ui, sans-serif;
   line-height: 1.65;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .gv-page *,
@@ -56,8 +79,15 @@
   outline-offset: 4px;
 }
 
+.gv-page img,
+.gv-page svg {
+  max-width: 100%;
+}
+
 .gv-wrap {
   width: min(100% - 48px, 1200px);
+  max-width: 100%;
+  min-width: 0;
   margin-inline: auto;
 }
 
@@ -72,37 +102,17 @@
   letter-spacing: 0;
 }
 
-/* Tricolour strip */
-
-.gv-tricolour {
-  display: flex;
-  width: 100%;
-  height: 5px;
-}
-
-.gv-tricolour i {
-  flex: 1;
-}
-
-.gv-tricolour i:nth-child(1) {
-  background: var(--saffron);
-}
-
-.gv-tricolour i:nth-child(2) {
-  background: #fff;
-  box-shadow: inset 0 0 0 1px var(--line);
-}
-
-.gv-tricolour i:nth-child(3) {
-  background: var(--green);
-}
-
-/* Scrolling notice */
+/* ======================================
+   SCROLLING NOTICE
+====================================== */
 
 .gv-ticker {
   display: flex;
   align-items: stretch;
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
+  overflow: hidden;
   background: var(--navy);
   color: #fff;
   font-size: 13px;
@@ -117,12 +127,14 @@
   background: var(--saffron);
   font-weight: 700;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .gv-ticker-track {
   display: flex;
   align-items: center;
-  flex: 1;
+  flex: 1 1 0;
+  width: 0;
   min-width: 0;
   overflow: hidden;
 }
@@ -131,13 +143,16 @@
   display: flex;
   align-items: center;
   gap: 52px;
+  width: max-content;
+  flex: 0 0 auto;
   padding-left: 30px;
   white-space: nowrap;
   animation: gv-scroll 42s linear infinite;
+  will-change: transform;
 }
 
 .gv-ticker-move span {
-  flex-shrink: 0;
+  flex: 0 0 auto;
 }
 
 .gv-ticker:hover .gv-ticker-move {
@@ -150,12 +165,17 @@
   }
 }
 
-/* Hero */
+/* ======================================
+   HERO
+====================================== */
 
 .gv-hero {
   position: relative;
   isolation: isolate;
+  width: 100%;
+  max-width: 100%;
   padding: clamp(44px, 6vw, 82px) 0;
+  overflow: hidden;
   background: linear-gradient(145deg, #fff 0%, var(--tint) 100%);
   border-bottom: 1px solid var(--line);
 }
@@ -166,6 +186,7 @@
   right: -100px;
   top: -100px;
   width: clamp(240px, 38vw, 460px);
+  max-width: none;
   color: var(--navy);
   opacity: 0.055;
   animation: gv-spin 120s linear infinite;
@@ -180,10 +201,11 @@
 
 .gv-hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.8fr);
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.8fr);
   align-items: center;
   gap: clamp(28px, 5vw, 64px);
   position: relative;
+  min-width: 0;
 }
 
 .gv-hero-copy {
@@ -199,17 +221,19 @@
   color: var(--navy);
   font-size: clamp(13px, 1.3vw, 16px);
   font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .gv-hero h1 {
-  margin: 20px 0;
   max-width: 780px;
+  margin: 20px 0;
   color: var(--navy-dark);
   font-family: "Noto Serif", Georgia, serif;
   font-size: clamp(32px, 4.1vw, 54px);
   line-height: 1.2;
   letter-spacing: -0.7px;
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 
 .gv-lead {
@@ -217,16 +241,20 @@
   color: var(--muted);
   font-size: clamp(15px, 1.4vw, 17px);
   line-height: 1.85;
+  overflow-wrap: anywhere;
 }
 
 .gv-hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  max-width: 100%;
   margin-top: 30px;
 }
 
-/* Buttons */
+/* ======================================
+   BUTTONS
+====================================== */
 
 .gv-btn {
   display: inline-flex;
@@ -242,12 +270,17 @@
   font-weight: 700;
   line-height: 1.4;
   text-align: center;
+  overflow-wrap: anywhere;
   transition:
     background-color 180ms ease,
     color 180ms ease,
     border-color 180ms ease,
     box-shadow 180ms ease,
     transform 180ms ease;
+}
+
+.gv-btn svg {
+  flex: 0 0 auto;
 }
 
 .gv-btn:hover {
@@ -284,9 +317,12 @@
   background: var(--navy-dark);
 }
 
-/* Quick services panel */
+/* ======================================
+   QUICK SERVICES PANEL
+====================================== */
 
 .gv-panel {
+  width: 100%;
   min-width: 0;
   overflow: hidden;
   background: #fff;
@@ -313,6 +349,7 @@
   display: flex;
   align-items: center;
   gap: 13px;
+  width: 100%;
   min-width: 0;
   padding: 16px 18px;
   transition: background-color 160ms ease;
@@ -344,8 +381,9 @@
 }
 
 .gv-panel-text {
-  flex: 1;
+  flex: 1 1 0;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .gv-panel-text strong {
@@ -353,6 +391,7 @@
   color: var(--ink);
   font-size: 14px;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .gv-panel-text small {
@@ -361,6 +400,7 @@
   color: var(--muted);
   font-size: 12px;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .gv-panel-arrow {
@@ -373,9 +413,14 @@
   transform: translateX(4px);
 }
 
-/* Shared content sections */
+/* ======================================
+   SHARED CONTENT SECTIONS
+====================================== */
 
 .gv-section {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: clamp(48px, 6vw, 78px) 0;
 }
 
@@ -385,6 +430,7 @@
 }
 
 .gv-heading {
+  min-width: 0;
   margin-bottom: 30px;
 }
 
@@ -397,6 +443,7 @@
   font-weight: 700;
   line-height: 1.35;
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 
 .gv-heading h2::after {
@@ -424,14 +471,18 @@
   color: var(--muted);
   font-size: 15px;
   line-height: 1.8;
+  overflow-wrap: anywhere;
 }
 
-/* Action cards */
+/* ======================================
+   ACTION CARDS
+====================================== */
 
 .gv-actions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
+  min-width: 0;
 }
 
 .gv-action {
@@ -460,6 +511,7 @@
   place-items: center;
   width: 54px;
   height: 54px;
+  flex: 0 0 54px;
   margin-bottom: 20px;
   border-radius: 12px;
   background: var(--navy);
@@ -475,31 +527,37 @@
 }
 
 .gv-action h3 {
+  max-width: 100%;
   margin-bottom: 9px;
   color: var(--navy-dark);
   font-size: 18px;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .gv-action p {
+  max-width: 100%;
   margin-bottom: 22px;
   color: var(--muted);
   font-size: 14px;
   line-height: 1.8;
+  overflow-wrap: anywhere;
 }
 
 .gv-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  max-width: 100%;
   margin-top: auto;
   color: var(--navy);
   font-size: 14px;
   font-weight: 800;
+  overflow-wrap: anywhere;
 }
 
 .gv-link svg {
-  flex-shrink: 0;
+  flex: 0 0 auto;
   transition: transform 180ms ease;
 }
 
@@ -507,11 +565,15 @@
   transform: translateX(4px);
 }
 
-/* Issue categories */
+/* ======================================
+   ISSUE CATEGORIES
+====================================== */
 
 .gv-services {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+  min-width: 0;
   overflow: hidden;
   background: #fff;
   border: 1px solid var(--line);
@@ -561,6 +623,7 @@
 }
 
 .gv-services li > div {
+  flex: 1 1 0;
   min-width: 0;
 }
 
@@ -569,21 +632,26 @@
   color: var(--navy-dark);
   font-size: 15px;
   line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
 .gv-services p {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.8;
+  overflow-wrap: anywhere;
 }
 
-/* How it works */
+/* ======================================
+   HOW IT WORKS
+====================================== */
 
 .gv-how {
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   align-items: start;
   gap: clamp(28px, 5vw, 64px);
+  min-width: 0;
 }
 
 .gv-heading-left {
@@ -650,6 +718,7 @@
 }
 
 .gv-steps li > div {
+  flex: 1 1 0;
   min-width: 0;
 }
 
@@ -657,6 +726,7 @@
   color: var(--navy-dark);
   font-size: 15px;
   line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 .gv-steps p {
@@ -664,67 +734,28 @@
   color: var(--muted);
   font-size: 13px;
   line-height: 1.8;
+  overflow-wrap: anywhere;
 }
 
-/* Final call to action */
-
-.gv-cta {
-  background: #fff;
-  border-top: 1px solid var(--line);
-}
-
-.gv-cta-inner {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  padding-block: clamp(30px, 4.5vw, 52px);
-}
-
-.gv-cta-icon {
-  display: grid;
-  place-items: center;
-  width: 64px;
-  height: 64px;
-  flex: 0 0 64px;
-  border-radius: 16px;
-  background: #e6edf7;
-  color: var(--navy);
-}
-
-.gv-cta-copy {
-  flex: 1;
-  min-width: 0;
-}
-
-.gv-cta h2 {
-  color: var(--navy-dark);
-  font-family: "Noto Serif", Georgia, serif;
-  font-size: clamp(20px, 2.4vw, 28px);
-  line-height: 1.45;
-  text-wrap: balance;
-}
-
-.gv-cta p {
-  margin-top: 7px;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.8;
-}
-
-/* Entrance animation */
+/* ======================================
+   ENTRANCE ANIMATION
+====================================== */
 
 @keyframes gv-rise {
   from {
     opacity: 0;
     transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Tablet and smaller laptops */
+/* ======================================
+   TABLET
+====================================== */
 
 @media (max-width: 1000px) {
   .gv-hero-grid {
@@ -775,7 +806,9 @@
   }
 }
 
-/* Mobile */
+/* ======================================
+   MOBILE
+====================================== */
 
 @media (max-width: 600px) {
   .gv-wrap {
@@ -865,6 +898,7 @@
   .gv-action-icon {
     width: 48px;
     height: 48px;
+    flex-basis: 48px;
     margin-bottom: 15px;
   }
 
@@ -921,31 +955,6 @@
     font-size: 13px;
   }
 
-  .gv-cta-inner {
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-
-  .gv-cta-icon {
-    width: 48px;
-    height: 48px;
-    flex-basis: 48px;
-    border-radius: 12px;
-  }
-
-  .gv-cta-copy {
-    flex-basis: calc(100% - 64px);
-  }
-
-  .gv-cta h2 {
-    font-size: 21px;
-  }
-
-  .gv-cta .gv-btn {
-    width: 100%;
-  }
-
   .gv-ticker {
     font-size: 12px;
   }
@@ -967,7 +976,9 @@
   }
 }
 
-/* Very narrow phones */
+/* ======================================
+   VERY NARROW PHONES
+====================================== */
 
 @media (max-width: 360px) {
   .gv-wrap {
@@ -999,7 +1010,9 @@
   }
 }
 
-/* Accessibility */
+/* ======================================
+   REDUCED MOTION ACCESSIBILITY
+====================================== */
 
 @media (prefers-reduced-motion: reduce) {
   .gv-page *,
