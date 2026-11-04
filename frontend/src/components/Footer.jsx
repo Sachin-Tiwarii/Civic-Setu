@@ -77,7 +77,7 @@ export default function Footer() {
 
         <div className="footer-developer">
 
-          <span>Designed & Developed with care by</span>
+          <span>Designed & Developed with ❤️ by</span>
 
           <a
             href="https://sachin-tech.vercel.app/"
