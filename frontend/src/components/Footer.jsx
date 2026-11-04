@@ -6,7 +6,47 @@ import {
 } from "lucide-react";
 import "./Footer.css";
 
-export default function Footer() {
+const translations = {
+  en: {
+    tagline: "Citizen Participation Portal",
+    description:
+      "Building better neighbourhoods through citizen participation, transparent governance and accountable civic reporting.",
+    badge: "Citizen Powered Governance",
+    explore: "Explore",
+    home: "Home",
+    reports: "Public Reports",
+    leaderboard: "Leaderboard",
+    services: "Citizen Services",
+    report: "Report an Issue",
+    dashboard: "My Dashboard",
+    login: "Citizen Login",
+    rights: "All Rights Reserved.",
+    developer: "Designed & Developed with ❤️ by",
+    footerTagline: "सेवा • सहभागिता • समाधान",
+  },
+
+  hi: {
+    tagline: "नागरिक सहभागिता पोर्टल",
+    description:
+      "नागरिक भागीदारी, पारदर्शी शासन और जवाबदेह शिकायत प्रणाली के माध्यम से बेहतर पड़ोस का निर्माण।",
+    badge: "नागरिक सशक्त शासन",
+    explore: "अन्वेषण करें",
+    home: "मुख्य पृष्ठ",
+    reports: "सार्वजनिक शिकायतें",
+    leaderboard: "लीडरबोर्ड",
+    services: "नागरिक सेवाएँ",
+    report: "समस्या की शिकायत करें",
+    dashboard: "मेरा डैशबोर्ड",
+    login: "नागरिक लॉगिन",
+    rights: "सर्वाधिकार सुरक्षित।",
+    developer: "डिज़ाइन और विकास ❤️ द्वारा",
+    footerTagline: "सेवा • सहभागिता • समाधान",
+  },
+};
+
+export default function Footer({ lang = "en" }) {
+  const t = translations[lang] || translations.en;
+
   return (
     <footer className="civic-footer">
 
@@ -31,38 +71,34 @@ export default function Footer() {
 
             <div className="civic-footer-brand-name">
               <strong>CivicSetu</strong>
-              <span>Citizen Participation Portal</span>
+              <span>{t.tagline}</span>
             </div>
           </Link>
 
-          <p>
-            Building better neighbourhoods through citizen
-            participation, transparent governance and
-            accountable civic reporting.
-          </p>
+          <p>{t.description}</p>
 
           <div className="footer-government-badge">
             <ShieldCheck size={15} />
-            <span>Citizen Powered Governance</span>
+            <span>{t.badge}</span>
           </div>
         </div>
 
         {/* Explore links */}
         <div className="civic-footer-links">
-          <h3>Explore</h3>
+          <h3>{t.explore}</h3>
 
-          <Link to="/">Home</Link>
-          <Link to="/explore">Public Reports</Link>
-          <Link to="/leaderboard">Leaderboard</Link>
+          <Link to="/">{t.home}</Link>
+          <Link to="/explore">{t.reports}</Link>
+          <Link to="/leaderboard">{t.leaderboard}</Link>
         </div>
 
         {/* Services */}
         <div className="civic-footer-links">
-          <h3>Citizen Services</h3>
+          <h3>{t.services}</h3>
 
-          <Link to="/report-issue">Report an Issue</Link>
-          <Link to="/dashboard">My Dashboard</Link>
-          <Link to="/login">Citizen Login</Link>
+          <Link to="/report-issue">{t.report}</Link>
+          <Link to="/dashboard">{t.dashboard}</Link>
+          <Link to="/login">{t.login}</Link>
         </div>
 
       </div>
@@ -72,12 +108,12 @@ export default function Footer() {
 
         <p>
           © {new Date().getFullYear()} CivicSetu.
-          All Rights Reserved.
+          {" "}{t.rights}
         </p>
 
         <div className="footer-developer">
 
-          <span>Designed & Developed with ❤️ by</span>
+          <span>{t.developer}</span>
 
           <a
             href="https://sachin-tech.vercel.app/"
@@ -92,7 +128,7 @@ export default function Footer() {
         </div>
 
         <span className="footer-tagline">
-          सेवा • सहभागिता • समाधान
+          {t.footerTagline}
         </span>
 
       </div>

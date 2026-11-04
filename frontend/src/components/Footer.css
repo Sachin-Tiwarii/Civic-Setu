@@ -5,10 +5,11 @@
 
 .civic-footer {
   width: 100%;
+  margin: 0;
+  padding: 0;
   background: #102b50;
   color: #ffffff;
   font-family: "Noto Sans", "Segoe UI", sans-serif;
-  padding: 0 24px;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -44,16 +45,19 @@
   background: #138808;
 }
 
-/* Main footer */
+/* ======================================
+   MAIN FOOTER
+====================================== */
 
 .civic-footer-inner {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
+  padding: 0 40px 42px;
+
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   gap: 65px;
-  padding-bottom: 42px;
 }
 
 /* Brand */
@@ -116,7 +120,9 @@
   font-size: 11px;
 }
 
-/* Navigation links */
+/* ======================================
+   NAVIGATION LINKS
+====================================== */
 
 .civic-footer-links {
   display: flex;
@@ -157,13 +163,15 @@
   transform: translateX(5px);
 }
 
-/* Bottom bar */
+/* ======================================
+   BOTTOM BAR
+====================================== */
 
 .civic-footer-bottom {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px 0;
+  max-width: none;
+  margin: 0;
+  padding: 20px 40px;
 
   /* Keep only one divider */
   border-top: 1px solid rgba(255, 255, 255, 0.18);
@@ -190,13 +198,15 @@
   white-space: nowrap;
 }
 
-/* Developer credit */
+/* ======================================
+   DEVELOPER CREDIT
+====================================== */
 
 .footer-developer {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 17px 0 22px;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
 
   display: flex;
   justify-content: center;
@@ -204,7 +214,7 @@
   flex-wrap: wrap;
   gap: 6px;
 
-  /* Removed extra horizontal line */
+  /* No extra divider */
   border-top: none;
 
   color: #aebed1;
@@ -261,12 +271,10 @@
 ====================================== */
 
 @media (max-width: 900px) {
-
   .civic-footer-inner {
     grid-template-columns: 1.5fr 1fr 1fr;
     gap: 30px;
   }
-
 }
 
 /* ======================================
@@ -274,9 +282,8 @@
 ====================================== */
 
 @media (max-width: 650px) {
-
   .civic-footer {
-    padding: 0 18px;
+    padding: 0;
   }
 
   .footer-tricolour {
@@ -286,7 +293,7 @@
   .civic-footer-inner {
     grid-template-columns: 1fr 1fr;
     gap: 35px 20px;
-    padding-bottom: 30px;
+    padding: 0 18px 30px;
   }
 
   .civic-footer-brand {
@@ -304,6 +311,7 @@
   }
 
   .civic-footer-bottom {
+    padding: 20px 18px;
     align-items: flex-start;
     flex-direction: column;
     gap: 12px;
@@ -317,7 +325,6 @@
   .footer-tagline {
     white-space: nowrap;
   }
-
 }
 
 /* ======================================
@@ -325,7 +332,6 @@
 ====================================== */
 
 @media (max-width: 380px) {
-
   .civic-footer-inner {
     grid-template-columns: 1fr;
     gap: 28px;
@@ -338,5 +344,4 @@
   .civic-footer-links {
     gap: 13px;
   }
-
 }
