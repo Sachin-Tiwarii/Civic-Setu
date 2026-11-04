@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   BrowserRouter,
@@ -41,6 +40,7 @@ function AppLayout({ children, lang, onLangChange }) {
 }
 
 export default function App() {
+  // Default language is English
   const [lang, setLang] = useState("en");
 
   const layoutProps = {
@@ -56,7 +56,7 @@ export default function App() {
           path="/"
           element={
             <AppLayout {...layoutProps}>
-              <Home />
+              <Home lang={lang} />
             </AppLayout>
           }
         />
