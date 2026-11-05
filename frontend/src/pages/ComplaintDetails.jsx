@@ -14,10 +14,94 @@ const statusSteps = [
   "Resolved",
 ];
 
-function formatDate(date) {
-  if (!date) return "Not available";
+const text = {
+  en: {
+    loading: "Loading complaint details...",
+    unavailable: "Complaint unavailable",
+    notFound: "This complaint could not be found.",
+    loadError: "Could not load this complaint.",
+    networkError: "Unable to connect to CivicSetu.",
+    backExplore: "← Back to Explore Issues",
+    allReports: "← All community reports",
+    reportedOn: "Reported on",
+    aboutIssue: "About this issue",
+    reportedLocation: "Reported location",
+    addressMissing: "Address not provided",
+    viewMap: "View location on OpenStreetMap ↗",
+    attachedEvidence: "Attached evidence",
+    openEvidence: "Open evidence ↗",
+    resolutionProgress: "Resolution progress",
+    rejected: "This report was rejected.",
+    currentStatus: "Current status",
+    status: "CURRENT STATUS",
+    followPage:
+      "Follow this page to see the latest publicly available information about the report.",
+    reportCategory: "REPORT CATEGORY",
+    lastUpdated: "LAST UPDATED",
+    anotherIssue: "Have you noticed another issue?",
+    submitReport: "Submit a new report ↗",
+    current: "Current status",
+    reopened:
+      "This complaint has been reopened for further attention.",
+    notAvailable: "Not available",
+    statuses: {
+      Submitted: "Submitted",
+      "Under Verification": "Under Verification",
+      Verified: "Verified",
+      Assigned: "Assigned",
+      "In Progress": "In Progress",
+      Resolved: "Resolved",
+      Rejected: "Rejected",
+      Reopened: "Reopened",
+    },
+  },
 
-  return new Date(date).toLocaleString("en-IN", {
+  hi: {
+    loading: "शिकायत का विवरण लोड हो रहा है...",
+    unavailable: "शिकायत उपलब्ध नहीं है",
+    notFound: "यह शिकायत नहीं मिल सकी।",
+    loadError: "इस शिकायत को लोड नहीं किया जा सका।",
+    networkError: "CivicSetu से कनेक्ट नहीं हो सका।",
+    backExplore: "← शिकायतें देखें",
+    allReports: "← सभी सामुदायिक रिपोर्ट",
+    reportedOn: "रिपोर्ट की तारीख",
+    aboutIssue: "इस समस्या के बारे में",
+    reportedLocation: "रिपोर्ट किया गया स्थान",
+    addressMissing: "पता उपलब्ध नहीं है",
+    viewMap: "OpenStreetMap पर स्थान देखें ↗",
+    attachedEvidence: "संलग्न साक्ष्य",
+    openEvidence: "साक्ष्य खोलें ↗",
+    resolutionProgress: "समाधान की प्रगति",
+    rejected: "यह रिपोर्ट अस्वीकार कर दी गई है।",
+    currentStatus: "वर्तमान स्थिति",
+    status: "वर्तमान स्थिति",
+    followPage:
+      "रिपोर्ट की नवीनतम सार्वजनिक जानकारी देखने के लिए इस पेज पर जाएँ।",
+    reportCategory: "रिपोर्ट की श्रेणी",
+    lastUpdated: "अंतिम अपडेट",
+    anotherIssue: "क्या आपने कोई अन्य समस्या देखी है?",
+    submitReport: "नई रिपोर्ट दर्ज करें ↗",
+    current: "वर्तमान स्थिति",
+    reopened:
+      "इस शिकायत को आगे की कार्रवाई के लिए दोबारा खोला गया है।",
+    notAvailable: "उपलब्ध नहीं है",
+    statuses: {
+      Submitted: "जमा की गई",
+      "Under Verification": "सत्यापन के अंतर्गत",
+      Verified: "सत्यापित",
+      Assigned: "सौंपा गया",
+      "In Progress": "कार्य प्रगति पर",
+      Resolved: "समाधान हो गया",
+      Rejected: "अस्वीकृत",
+      Reopened: "दोबारा खोली गई",
+    },
+  },
+};
+
+function formatDate(date, locale, notAvailable) {
+  if (!date) return notAvailable;
+
+  return new Date(date).toLocaleString(locale, {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -26,7 +110,11 @@ function formatDate(date) {
   });
 }
 
-function ComplaintDetails() {
+function ComplaintDetails({ lang = "en" }) {
+  const currentLang = lang === "hi" ? "hi" : "en";
+  const t = text[currentLang];
+  const locale = currentLang === "hi" ? "hi-IN" : "en-IN";
+
   const { id } = useParams();
   const [complaint, setComplaint] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -48,13 +136,19 @@ function ComplaintDetails() {
         const data = await response.json();
 
         if (!response.ok || data.success !== true) {
-          throw new Error(data.message || "Could not load this complaint.");
+          throw new Error(data.message || "LOAD_ERROR");
         }
 
         setComplaint(data.complaint);
       } catch (err) {
         if (err.name !== "AbortError") {
-          setError(err.message || "Unable to connect to CivicSetu.");
+          setError(
+            err.message === "LOAD_ERROR"
+              ? "LOAD_ERROR"
+              : err instanceof TypeError
+                ? "NETWORK_ERROR"
+                : err.message || "LOAD_ERROR"
+          );
         }
       } finally {
         if (!controller.signal.aborted) {
@@ -70,19 +164,26 @@ function ComplaintDetails() {
 
   if (loading) {
     return (
-      <div className="complaint-details-state">
+      <div className={`complaint-details-state ${currentLang === "hi" ? "complaint-details-hindi-page" : ""}`}>
         <div className="complaint-details-spinner" />
-        <p>Loading complaint details...</p>
+        <p>{t.loading}</p>
       </div>
     );
   }
 
   if (error || !complaint) {
+    const errorMessage =
+      error === "NETWORK_ERROR"
+        ? t.networkError
+        : error === "LOAD_ERROR"
+          ? t.loadError
+          : error || t.notFound;
+
     return (
-      <div className="complaint-details-state">
-        <h2>Complaint unavailable</h2>
-        <p>{error || "This complaint could not be found."}</p>
-        <Link to="/explore">← Back to Explore Issues</Link>
+      <div className={`complaint-details-state ${currentLang === "hi" ? "complaint-details-hindi-page" : ""}`}>
+        <h2>{t.unavailable}</h2>
+        <p>{errorMessage}</p>
+        <Link to="/explore">{t.backExplore}</Link>
       </div>
     );
   }
@@ -91,16 +192,20 @@ function ComplaintDetails() {
   const coordinates = complaint.location?.coordinates;
   const longitude = Array.isArray(coordinates) ? coordinates[0] : null;
   const latitude = Array.isArray(coordinates) ? coordinates[1] : null;
+
   const mapsUrl =
     latitude != null && longitude != null
       ? `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=17/${latitude}/${longitude}`
       : null;
 
+  const displayStatus =
+    t.statuses[complaint.status] || complaint.status;
+
   return (
-    <div className="complaint-details-page">
+    <div className={`complaint-details-page ${currentLang === "hi" ? "complaint-details-hindi-page" : ""}`}>
       <div className="complaint-details-container">
         <Link to="/explore" className="complaint-back-link">
-          ← All community reports
+          {t.allReports}
         </Link>
 
         <div className="complaint-details-layout">
@@ -109,34 +214,44 @@ function ComplaintDetails() {
               <span className="complaint-category-badge">
                 {complaint.category}
               </span>
+
               <span
                 className={`complaint-status-badge status-${String(
                   complaint.status || ""
                 ).toLowerCase().replace(/[^a-z]+/g, "-")}`}
               >
-                {complaint.status}
+                {displayStatus}
               </span>
             </div>
 
             <h1>{complaint.title}</h1>
 
             <p className="complaint-reported-date">
-              Reported on {formatDate(complaint.createdAt)}
+              {t.reportedOn}{" "}
+              {formatDate(
+                complaint.createdAt,
+                locale,
+                t.notAvailable
+              )}
             </p>
 
             <section className="complaint-details-section">
-              <h2>About this issue</h2>
+              <h2>{t.aboutIssue}</h2>
               <p className="complaint-full-description">
                 {complaint.description}
               </p>
             </section>
 
             <section className="complaint-details-section">
-              <h2>Reported location</h2>
+              <h2>{t.reportedLocation}</h2>
+
               <div className="complaint-location-box">
                 <span className="complaint-location-icon">⌖</span>
                 <div>
-                  <strong>{complaint.location?.address || "Address not provided"}</strong>
+                  <strong>
+                    {complaint.location?.address || t.addressMissing}
+                  </strong>
+
                   {latitude != null && longitude != null && (
                     <p>
                       {latitude.toFixed(5)}, {longitude.toFixed(5)}
@@ -152,7 +267,7 @@ function ComplaintDetails() {
                   rel="noreferrer"
                   className="complaint-map-link"
                 >
-                  View location on OpenStreetMap ↗
+                  {t.viewMap}
                 </a>
               )}
             </section>
@@ -160,7 +275,8 @@ function ComplaintDetails() {
             {Array.isArray(complaint.evidence) &&
               complaint.evidence.length > 0 && (
                 <section className="complaint-details-section">
-                  <h2>Attached evidence</h2>
+                  <h2>{t.attachedEvidence}</h2>
+
                   <div className="complaint-evidence-grid">
                     {complaint.evidence.map((item, index) => (
                       <a
@@ -171,7 +287,11 @@ function ComplaintDetails() {
                         key={item.publicId || item.url || index}
                       >
                         {item.mediaType === "video" ? (
-                          <video src={item.url} controls preload="metadata" />
+                          <video
+                            src={item.url}
+                            controls
+                            preload="metadata"
+                          />
                         ) : (
                           <img
                             src={item.url}
@@ -179,7 +299,8 @@ function ComplaintDetails() {
                             loading="lazy"
                           />
                         )}
-                        <span>Open evidence ↗</span>
+
+                        <span>{t.openEvidence}</span>
                       </a>
                     ))}
                   </div>
@@ -187,10 +308,12 @@ function ComplaintDetails() {
               )}
 
             <section className="complaint-details-section">
-              <h2>Resolution progress</h2>
+              <h2>{t.resolutionProgress}</h2>
+
               {complaint.status === "Rejected" ? (
                 <div className="complaint-rejection-note">
-                  <strong>This report was rejected.</strong>
+                  <strong>{t.rejected}</strong>
+
                   {complaint.rejectionReason && (
                     <p>{complaint.rejectionReason}</p>
                   )}
@@ -199,7 +322,9 @@ function ComplaintDetails() {
                 <div className="complaint-timeline">
                   {statusSteps.map((step, index) => {
                     const isComplete =
-                      currentStatusIndex >= 0 && index <= currentStatusIndex;
+                      currentStatusIndex >= 0 &&
+                      index <= currentStatusIndex;
+
                     const isCurrent = step === complaint.status;
 
                     return (
@@ -212,16 +337,21 @@ function ComplaintDetails() {
                         <div className="complaint-timeline-marker">
                           {isComplete ? "✓" : index + 1}
                         </div>
+
                         <div>
-                          <strong>{step}</strong>
-                          {isCurrent && <span>Current status</span>}
+                          <strong>{t.statuses[step] || step}</strong>
+
+                          {isCurrent && (
+                            <span>{t.current}</span>
+                          )}
                         </div>
                       </div>
                     );
                   })}
+
                   {complaint.status === "Reopened" && (
                     <div className="complaint-reopened-note">
-                      This complaint has been reopened for further attention.
+                      {t.reopened}
                     </div>
                   )}
                 </div>
@@ -231,23 +361,40 @@ function ComplaintDetails() {
 
           <aside className="complaint-sidebar">
             <div className="complaint-sidebar-card">
-              <p className="complaint-sidebar-eyebrow">CURRENT STATUS</p>
-              <h3>{complaint.status}</h3>
-              <p>
-                Follow this page to see the latest publicly available
-                information about the report.
+              <p className="complaint-sidebar-eyebrow">
+                {t.status}
               </p>
+
+              <h3>{displayStatus}</h3>
+
+              <p>{t.followPage}</p>
+
               <div className="complaint-sidebar-divider" />
-              <p className="complaint-sidebar-eyebrow">REPORT CATEGORY</p>
+
+              <p className="complaint-sidebar-eyebrow">
+                {t.reportCategory}
+              </p>
+
               <strong>{complaint.category}</strong>
+
               <div className="complaint-sidebar-divider" />
-              <p className="complaint-sidebar-eyebrow">LAST UPDATED</p>
-              <strong>{formatDate(complaint.updatedAt)}</strong>
+
+              <p className="complaint-sidebar-eyebrow">
+                {t.lastUpdated}
+              </p>
+
+              <strong>
+                {formatDate(
+                  complaint.updatedAt,
+                  locale,
+                  t.notAvailable
+                )}
+              </strong>
             </div>
 
             <div className="complaint-sidebar-help">
-              <span>Have you noticed another issue?</span>
-              <Link to="/report-issue">Submit a new report ↗</Link>
+              <span>{t.anotherIssue}</span>
+              <Link to="/report-issue">{t.submitReport}</Link>
             </div>
           </aside>
         </div>
@@ -257,3 +404,4 @@ function ComplaintDetails() {
 }
 
 export default ComplaintDetails;
+  
