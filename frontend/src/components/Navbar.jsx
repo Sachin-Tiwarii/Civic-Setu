@@ -5,7 +5,6 @@ import {
   FilePlus,
   Home,
   LayoutDashboard,
-  LogIn,
   Menu,
   Search,
   Trophy,
@@ -30,7 +29,6 @@ const translations = {
       leaderboard: "Leaderboard",
       report: "Report Issue",
       dashboard: "Dashboard",
-      login: "Login",
     },
   },
 
@@ -48,7 +46,6 @@ const translations = {
       leaderboard: "लीडरबोर्ड",
       report: "शिकायत दर्ज करें",
       dashboard: "डैशबोर्ड",
-      login: "लॉगिन",
     },
   },
 };
@@ -71,12 +68,15 @@ export default function Navbar({
   const isLoggedIn = Boolean(user);
 
   const accountLink = {
-    to: isLoggedIn ? "/dashboard" : "/login",
-    key: isLoggedIn ? "dashboard" : "login",
-    icon: isLoggedIn ? LayoutDashboard : LogIn,
+    to: "/dashboard",
+    key: "dashboard",
+    icon: LayoutDashboard,
   };
 
-  const menuLinks = [...links, accountLink];
+  // Show Dashboard only when logged in. Never show Login in dropdown.
+  const menuLinks = isLoggedIn
+    ? [...links, accountLink]
+    : links;
 
   const [open, setOpen] = useState(false);
 
@@ -194,7 +194,7 @@ export default function Navbar({
             </span>
           </button>
 
-          {/* Profile: Dashboard if logged in, Login otherwise */}
+          {/* Profile */}
           <Link
             to={isLoggedIn ? "/dashboard" : "/login"}
             className="gn-icon-btn"
@@ -205,7 +205,7 @@ export default function Navbar({
             <User size={20} aria-hidden="true" />
           </Link>
 
-          {/* Menu */}
+          {/* Hamburger menu */}
           <div className="gn-menu-wrap" ref={menuRef}>
             <button
               type="button"
@@ -215,9 +215,7 @@ export default function Navbar({
               aria-expanded={open}
               aria-controls="gn-menu"
               aria-label={open ? t.close : t.menu}
-              onClick={() =>
-                setOpen((previous) => !previous)
-              }
+              onClick={() => setOpen((previous) => !previous)}
             >
               <Menu
                 size={21}
@@ -232,7 +230,7 @@ export default function Navbar({
               />
             </button>
 
-            {/* Dropdown */}
+            {/* Dropdown - no Menu heading */}
             <div
               id="gn-menu"
               className={`gn-menu ${
@@ -241,10 +239,6 @@ export default function Navbar({
               aria-hidden={!open}
               inert={!open}
             >
-              <p className="gn-menu-title">
-                {t.menu}
-              </p>
-
               <ul>
                 {menuLinks.map(
                   ({ to, key, icon: Icon, end }, index) => (
@@ -278,3 +272,4 @@ export default function Navbar({
     </header>
   );
 }
+  
