@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -51,6 +52,7 @@ const text = {
     errDefault: "Registration failed. Please try again.",
     errNetwork: "Could not connect to the server. Check your backend.",
   },
+
   hi: {
     panelKicker: "नए नागरिक का पंजीकरण",
     panelTitle: "अपने समुदाय से जुड़ें और स्थानीय समस्याओं को सामने लाएँ",
@@ -86,7 +88,9 @@ const text = {
 };
 
 function Register({ lang = "en" }) {
-  const t = text[lang] || text.en;
+  const currentLang = lang === "hi" ? "hi" : "en";
+  const t = text[currentLang];
+
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -95,13 +99,16 @@ function Register({ lang = "en" }) {
     password: "",
     confirmPassword: "",
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const lengthOk = form.password.length >= 8;
+
   const matchOk =
-    form.confirmPassword.length > 0 && form.password === form.confirmPassword;
+    form.confirmPassword.length > 0 &&
+    form.password === form.confirmPassword;
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -147,8 +154,13 @@ function Register({ lang = "en" }) {
         replace: true,
         state: { message: t.successMessage },
       });
+
     } catch (err) {
-      setError(err.message || t.errNetwork);
+      setError(
+        err instanceof TypeError
+          ? t.errNetwork
+          : err.message || t.errDefault
+      );
     } finally {
       setLoading(false);
     }
@@ -167,17 +179,26 @@ function Register({ lang = "en" }) {
   );
 
   return (
-    <section className="gr-page" lang={lang}>
+    <section
+      className={`gr-page ${currentLang === "hi" ? "gr-hindi-page" : ""}`}
+      lang={currentLang}
+    >
       <div className="gr-card">
+
         <aside className="gr-panel">
           <svg className="gr-panel-wheel" viewBox="0 0 100 100" aria-hidden="true">
             <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="4" />
             <circle cx="50" cy="50" r="8" fill="currentColor" />
+
             {Array.from({ length: 24 }, (_, i) => (
               <line
                 key={i}
-                x1="50" y1="12" x2="50" y2="42"
-                stroke="currentColor" strokeWidth="2.5"
+                x1="50"
+                y1="12"
+                x2="50"
+                y2="42"
+                stroke="currentColor"
+                strokeWidth="2.5"
                 transform={`rotate(${i * 15} 50 50)`}
               />
             ))}
@@ -190,6 +211,7 @@ function Register({ lang = "en" }) {
           <div className="gr-panel-body">
             <p className="gr-panel-kicker">{t.panelKicker}</p>
             <h2>{t.panelTitle}</h2>
+
             <ul>
               {t.points.map(({ icon: Icon, text: label }) => (
                 <li key={label}>
@@ -211,6 +233,7 @@ function Register({ lang = "en" }) {
           <span className="gr-badge" aria-hidden="true">
             <UserPlus size={24} />
           </span>
+
           <h1>{t.title}</h1>
           <p className="gr-subtitle">{t.subtitle}</p>
 
@@ -223,6 +246,7 @@ function Register({ lang = "en" }) {
 
           <form onSubmit={handleSubmit}>
             <label htmlFor="register-name">{t.name}</label>
+
             <div className="gr-field">
               <User size={18} />
               <input
@@ -239,6 +263,7 @@ function Register({ lang = "en" }) {
             </div>
 
             <label htmlFor="register-email">{t.email}</label>
+
             <div className="gr-field">
               <Mail size={18} />
               <input
@@ -254,6 +279,7 @@ function Register({ lang = "en" }) {
             </div>
 
             <label htmlFor="register-password">{t.password}</label>
+
             <div className="gr-field">
               <Lock size={18} />
               <input
@@ -271,6 +297,7 @@ function Register({ lang = "en" }) {
             </div>
 
             <label htmlFor="register-confirm-password">{t.confirm}</label>
+
             <div className="gr-field">
               <Lock size={18} />
               <input
@@ -290,6 +317,7 @@ function Register({ lang = "en" }) {
               <li className={lengthOk ? "is-ok" : ""}>
                 <Check size={14} /> {t.ruleLength}
               </li>
+
               <li className={matchOk ? "is-ok" : ""}>
                 <Check size={14} /> {t.ruleMatch}
               </li>
@@ -298,7 +326,8 @@ function Register({ lang = "en" }) {
             <button type="submit" className="gr-submit" disabled={loading}>
               {loading ? (
                 <>
-                  <LoaderCircle size={18} className="gr-spin" /> {t.submitting}
+                  <LoaderCircle size={18} className="gr-spin" />
+                  {t.submitting}
                 </>
               ) : (
                 <>
@@ -312,6 +341,7 @@ function Register({ lang = "en" }) {
             {t.haveAccount} <Link to="/login">{t.signIn}</Link>
           </p>
         </div>
+
       </div>
     </section>
   );
