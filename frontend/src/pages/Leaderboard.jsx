@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -49,6 +50,7 @@ const text = {
     ctaText:
       "Help your community by reporting local issues and supporting verified complaints.",
   },
+
   hi: {
     home: "मुख्य पृष्ठ",
     crumb: "लीडरबोर्ड",
@@ -84,7 +86,9 @@ const text = {
 };
 
 function Leaderboard({ lang = "en" }) {
-  const t = text[lang] || text.en;
+  const currentLang = lang === "hi" ? "hi" : "en";
+  const t = text[currentLang];
+
   const [citizens, setCitizens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -101,7 +105,11 @@ function Leaderboard({ lang = "en" }) {
 
         setCitizens(data.leaderboard || data.users || []);
       } catch (err) {
-        setError(err.message || t.errNetwork);
+        setError(
+          err instanceof TypeError
+            ? t.errNetwork
+            : err.message || t.errDefault
+        );
       } finally {
         setLoading(false);
       }
@@ -124,7 +132,10 @@ function Leaderboard({ lang = "en" }) {
   const medalIcons = [Trophy, Medal, Award];
 
   return (
-    <div className="gb-page" lang={lang}>
+    <div
+      className={`gb-page ${currentLang === "hi" ? "gb-hindi-page" : ""}`}
+      lang={currentLang}
+    >
       <div className="gb-tricolour" aria-hidden="true">
         <i />
         <i />
@@ -137,6 +148,7 @@ function Leaderboard({ lang = "en" }) {
             <Link to="/">
               <Home size={14} /> {t.home}
             </Link>
+
             <ChevronRight size={14} />
             <span aria-current="page">{t.crumb}</span>
           </nav>
@@ -145,6 +157,7 @@ function Leaderboard({ lang = "en" }) {
             <span className="gb-header-icon" aria-hidden="true">
               <Trophy size={30} />
             </span>
+
             <div>
               <p className="gb-kicker">{t.kicker}</p>
               <h1>{t.title}</h1>
@@ -156,6 +169,7 @@ function Leaderboard({ lang = "en" }) {
             <span className="gb-summary-icon">
               <Users size={22} />
             </span>
+
             <div>
               <strong>{loading ? "—" : citizens.length}</strong>
               <span>{t.onBoard}</span>
@@ -175,9 +189,14 @@ function Leaderboard({ lang = "en" }) {
             <span className="gb-state-icon">
               <AlertCircle size={28} />
             </span>
+
             <h3>{t.errTitle}</h3>
             <p>{error}</p>
-            <button type="button" onClick={() => window.location.reload()}>
+
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+            >
               <RefreshCw size={16} /> {t.retry}
             </button>
           </div>
@@ -186,8 +205,10 @@ function Leaderboard({ lang = "en" }) {
             <span className="gb-state-icon">
               <Trophy size={28} />
             </span>
+
             <h3>{t.emptyTitle}</h3>
             <p>{t.emptyText}</p>
+
             <Link to="/report-issue" className="gb-btn">
               <FilePlus size={17} /> {t.report}
             </Link>
@@ -204,6 +225,7 @@ function Leaderboard({ lang = "en" }) {
                 {topThree.map((citizen, index) => {
                   const rank = index + 1;
                   const Icon = medalIcons[index];
+
                   return (
                     <article
                       className={`gb-podium-card gb-rank-${rank}`}
@@ -212,9 +234,14 @@ function Leaderboard({ lang = "en" }) {
                       <span className="gb-medal">
                         <Icon size={22} />
                       </span>
-                      <span className="gb-avatar">{getInitials(citizen.name)}</span>
+
+                      <span className="gb-avatar">
+                        {getInitials(citizen.name)}
+                      </span>
+
                       <h3>{citizen.name || t.anonymous}</h3>
                       <span className="gb-place">{t.places[index]}</span>
+
                       <div className="gb-points">
                         <strong>{citizen.points ?? 0}</strong>
                         <span>{t.points}</span>
@@ -231,7 +258,10 @@ function Leaderboard({ lang = "en" }) {
                   <p>{t.allKicker}</p>
                   <h2>{t.allTitle}</h2>
                 </div>
-                <span className="gb-count">{t.citizensCount(citizens.length)}</span>
+
+                <span className="gb-count">
+                  {t.citizensCount(citizens.length)}
+                </span>
               </div>
 
               <div className="gb-table-wrap">
@@ -243,22 +273,34 @@ function Leaderboard({ lang = "en" }) {
                       <th scope="col">{t.pointsHead}</th>
                     </tr>
                   </thead>
+
                   <tbody>
                     {citizens.map((citizen, index) => (
-                      <tr key={citizen._id || citizen.id || citizen.email || index}>
+                      <tr
+                        key={citizen._id || citizen.id || citizen.email || index}
+                      >
                         <td>
-                          <span className={`gb-rank ${index < 3 ? `gb-rank-top-${index + 1}` : ""}`}>
+                          <span
+                            className={`gb-rank ${
+                              index < 3 ? `gb-rank-top-${index + 1}` : ""
+                            }`}
+                          >
                             {index + 1}
                           </span>
                         </td>
+
                         <td>
                           <div className="gb-citizen">
                             <span className="gb-small-avatar">
                               {getInitials(citizen.name)}
                             </span>
-                            <strong>{citizen.name || t.anonymous}</strong>
+
+                            <strong>
+                              {citizen.name || t.anonymous}
+                            </strong>
                           </div>
                         </td>
+
                         <td>
                           <span className="gb-points-value">
                             {citizen.points ?? 0}
@@ -278,10 +320,12 @@ function Leaderboard({ lang = "en" }) {
           <span className="gb-cta-icon" aria-hidden="true">
             <FilePlus size={28} />
           </span>
+
           <div>
             <h2>{t.ctaTitle}</h2>
             <p>{t.ctaText}</p>
           </div>
+
           <Link to="/report-issue" className="gb-btn">
             {t.report}
           </Link>
