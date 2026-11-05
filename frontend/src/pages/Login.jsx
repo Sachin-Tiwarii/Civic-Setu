@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -38,9 +39,9 @@ const text = {
     noAccount: "Don't have an account?",
     create: "Register now",
     errDefault: "Unable to log in. Please try again.",
-    errNetwork:
-      "Could not connect to the server. Check that your backend is running.",
+    errNetwork: "Could not connect to the server. Check that your backend is running.",
   },
+
   hi: {
     panelKicker: "नागरिक लॉगिन",
     panelTitle: "बेहतर पड़ोस के लिए आपकी आवाज़",
@@ -62,13 +63,14 @@ const text = {
     noAccount: "खाता नहीं है?",
     create: "अभी पंजीकरण करें",
     errDefault: "लॉगिन नहीं हो सका। कृपया पुनः प्रयास करें।",
-    errNetwork:
-      "सर्वर से संपर्क नहीं हो सका। जाँचें कि आपका बैकएंड चल रहा है।",
+    errNetwork: "सर्वर से संपर्क नहीं हो सका। जाँचें कि आपका बैकएंड चल रहा है।",
   },
 };
 
 function Login({ lang = "en" }) {
-  const t = text[lang] || text.en;
+  const currentLang = lang === "hi" ? "hi" : "en";
+  const t = text[currentLang];
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -76,6 +78,7 @@ function Login({ lang = "en" }) {
     email: "",
     password: "",
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -106,25 +109,39 @@ function Login({ lang = "en" }) {
 
       const destination = location.state?.from?.pathname || "/dashboard";
       navigate(destination, { replace: true });
+
     } catch (err) {
-      setError(err.message || t.errNetwork);
+      setError(
+        err instanceof TypeError
+          ? t.errNetwork
+          : err.message || t.errDefault
+      );
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <section className="gl-page" lang={lang}>
+    <section
+      className={`gl-page ${currentLang === "hi" ? "gl-hindi-page" : ""}`}
+      lang={currentLang}
+    >
       <div className="gl-card">
+
         <aside className="gl-panel">
           <svg className="gl-panel-wheel" viewBox="0 0 100 100" aria-hidden="true">
             <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="4" />
             <circle cx="50" cy="50" r="8" fill="currentColor" />
+
             {Array.from({ length: 24 }, (_, i) => (
               <line
                 key={i}
-                x1="50" y1="12" x2="50" y2="42"
-                stroke="currentColor" strokeWidth="2.5"
+                x1="50"
+                y1="12"
+                x2="50"
+                y2="42"
+                stroke="currentColor"
+                strokeWidth="2.5"
                 transform={`rotate(${i * 15} 50 50)`}
               />
             ))}
@@ -137,6 +154,7 @@ function Login({ lang = "en" }) {
           <div className="gl-panel-body">
             <p className="gl-panel-kicker">{t.panelKicker}</p>
             <h2>{t.panelTitle}</h2>
+
             <ul>
               {t.points.map(({ icon: Icon, text: label }) => (
                 <li key={label}>
@@ -158,6 +176,7 @@ function Login({ lang = "en" }) {
           <span className="gl-lock" aria-hidden="true">
             <LogIn size={24} />
           </span>
+
           <h1>{t.title}</h1>
           <p className="gl-subtitle">{t.subtitle}</p>
 
@@ -170,6 +189,7 @@ function Login({ lang = "en" }) {
 
           <form onSubmit={handleSubmit}>
             <label htmlFor="login-email">{t.email}</label>
+
             <div className="gl-field">
               <Mail size={18} />
               <input
@@ -185,8 +205,10 @@ function Login({ lang = "en" }) {
             </div>
 
             <label htmlFor="login-password">{t.password}</label>
+
             <div className="gl-field">
               <Lock size={18} />
+
               <input
                 id="login-password"
                 type={showPassword ? "text" : "password"}
@@ -197,6 +219,7 @@ function Login({ lang = "en" }) {
                 autoComplete="current-password"
                 required
               />
+
               <button
                 type="button"
                 className="gl-eye"
@@ -211,11 +234,13 @@ function Login({ lang = "en" }) {
             <button type="submit" className="gl-submit" disabled={loading}>
               {loading ? (
                 <>
-                  <LoaderCircle size={18} className="gl-spin" /> {t.submitting}
+                  <LoaderCircle size={18} className="gl-spin" />
+                  {t.submitting}
                 </>
               ) : (
                 <>
-                  {t.submit} <LogIn size={18} />
+                  {t.submit}
+                  <LogIn size={18} />
                 </>
               )}
             </button>
@@ -225,6 +250,7 @@ function Login({ lang = "en" }) {
             {t.noAccount} <Link to="/register">{t.create}</Link>
           </p>
         </div>
+
       </div>
     </section>
   );
