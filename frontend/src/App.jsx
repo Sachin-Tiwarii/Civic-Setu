@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import {
   BrowserRouter,
@@ -67,7 +68,7 @@ export default function App() {
           path="/login"
           element={
             <AppLayout {...layoutProps}>
-              <Login />
+              <Login lang={lang} />
             </AppLayout>
           }
         />
@@ -76,7 +77,7 @@ export default function App() {
           path="/register"
           element={
             <AppLayout {...layoutProps}>
-              <Register />
+              <Register lang={lang} />
             </AppLayout>
           }
         />
@@ -85,7 +86,7 @@ export default function App() {
           path="/explore"
           element={
             <AppLayout {...layoutProps}>
-              <ExploreIssues />
+              <ExploreIssues lang={lang} />
             </AppLayout>
           }
         />
@@ -94,7 +95,7 @@ export default function App() {
           path="/explore/:id"
           element={
             <AppLayout {...layoutProps}>
-              <ComplaintDetails />
+              <ComplaintDetails lang={lang} />
             </AppLayout>
           }
         />
@@ -103,7 +104,7 @@ export default function App() {
           path="/leaderboard"
           element={
             <AppLayout {...layoutProps}>
-              <Leaderboard />
+              <Leaderboard lang={lang} />
             </AppLayout>
           }
         />
@@ -114,7 +115,7 @@ export default function App() {
           element={
             <ProtectedRoute>
               <AppLayout {...layoutProps}>
-                <ReportIssue />
+                <ReportIssue lang={lang} />
               </AppLayout>
             </ProtectedRoute>
           }
@@ -125,7 +126,7 @@ export default function App() {
           element={
             <ProtectedRoute>
               <AppLayout {...layoutProps}>
-                <Dashboard />
+                <Dashboard lang={lang} />
               </AppLayout>
             </ProtectedRoute>
           }
@@ -136,7 +137,7 @@ export default function App() {
           element={
             <ProtectedRoute>
               <AppLayout {...layoutProps}>
-                <AdminDashboard />
+                <AdminDashboard lang={lang} />
               </AppLayout>
             </ProtectedRoute>
           }
