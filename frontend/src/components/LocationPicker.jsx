@@ -11,6 +11,19 @@ import "leaflet/dist/leaflet.css";
 
 const defaultPosition = [22.7196, 75.8577]; // Indore
 
+const text = {
+  en: {
+    locationHint: "Click anywhere on the map to mark the issue location.",
+    latitude: "Latitude",
+    longitude: "Longitude",
+  },
+  hi: {
+    locationHint: "समस्या का स्थान चुनने के लिए मैप पर कहीं भी क्लिक करें।",
+    latitude: "अक्षांश",
+    longitude: "देशांतर",
+  },
+};
+
 const markerIcon = new L.Icon({
   iconUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
@@ -38,7 +51,11 @@ function MapClickHandler({ onLocationSelect }) {
 export default function LocationPicker({
   position,
   onChange,
+  lang = "en",
 }) {
+  const currentLang = lang === "hi" ? "hi" : "en";
+  const t = text[currentLang];
+
   const [mapPosition, setMapPosition] = useState(
     position || defaultPosition
   );
@@ -51,7 +68,7 @@ export default function LocationPicker({
   return (
     <div className="location-picker">
       <p className="location-hint">
-        Click anywhere on the map to mark the issue location.
+        {t.locationHint}
       </p>
 
       <MapContainer
@@ -85,8 +102,8 @@ export default function LocationPicker({
       </MapContainer>
 
       <p className="coordinates-text">
-        Latitude: {mapPosition[0].toFixed(6)} ·
-        Longitude: {mapPosition[1].toFixed(6)}
+        {t.latitude}: {mapPosition[0].toFixed(6)} ·
+        {t.longitude}: {mapPosition[1].toFixed(6)}
       </p>
     </div>
   );
