@@ -1,3 +1,4 @@
+
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -67,15 +68,17 @@ const text = {
     loading: "Loading reports",
     errTitle: "Could not load reports",
     errDefault: "Something went wrong.",
+    errNetwork: "Unable to connect to the server.",
     retry: "Try again",
     emptyTitle: "No reports found",
-    emptyText: "Try a different search or change the filters to see more reports.",
+    emptyText:
+      "Try a different search or change the filters to see more reports.",
     clear: "Clear filters",
     viewDetails: "View details",
     noLocation: "Location not provided",
     noDate: "Date unavailable",
-    evidence: (t) => `Evidence for ${t}`,
-    view: (t) => `View ${t}`,
+    evidence: (title) => `Evidence for ${title}`,
+    view: (title) => `View ${title}`,
     prev: "Previous",
     next: "Next",
     pageOf: (p, n) => (
@@ -86,6 +89,7 @@ const text = {
     categoryNames: {},
     statusNames: {},
   },
+
   hi: {
     locale: "hi-IN",
     home: "मुख्य पृष्ठ",
@@ -110,15 +114,17 @@ const text = {
     loading: "रिपोर्ट लोड हो रही हैं",
     errTitle: "रिपोर्ट लोड नहीं हो सकीं",
     errDefault: "कुछ गलत हो गया।",
+    errNetwork: "सर्वर से संपर्क नहीं हो सका।",
     retry: "पुनः प्रयास करें",
     emptyTitle: "कोई रिपोर्ट नहीं मिली",
-    emptyText: "अधिक रिपोर्ट देखने के लिए कोई अन्य खोज करें या फ़िल्टर बदलें।",
+    emptyText:
+      "अधिक रिपोर्ट देखने के लिए कोई अन्य खोज करें या फ़िल्टर बदलें।",
     clear: "फ़िल्टर हटाएँ",
     viewDetails: "विवरण देखें",
     noLocation: "स्थान उपलब्ध नहीं",
     noDate: "तारीख उपलब्ध नहीं",
-    evidence: (t) => `${t} का साक्ष्य`,
-    view: (t) => `${t} देखें`,
+    evidence: (title) => `${title} का साक्ष्य`,
+    view: (title) => `${title} देखें`,
     prev: "पिछला",
     next: "अगला",
     pageOf: (p, n) => (
@@ -151,9 +157,11 @@ const text = {
 };
 
 function ExploreIssues({ lang = "en" }) {
-  const t = text[lang] || text.en;
-  const catLabel = (v) => t.categoryNames[v] || v;
-  const statLabel = (v) => t.statusNames[v] || v;
+  const currentLang = lang === "hi" ? "hi" : "en";
+  const t = text[currentLang];
+
+  const catLabel = (value) => t.categoryNames[value] || value;
+  const statLabel = (value) => t.statusNames[value] || value;
 
   const [complaints, setComplaints] = useState([]);
   const [search, setSearch] = useState("");
@@ -176,28 +184,36 @@ function ExploreIssues({ lang = "en" }) {
       });
 
       if (search.trim()) params.set("search", search.trim());
-      if (category !== "All Categories") params.set("category", category);
-      if (status !== "All Statuses") params.set("status", status);
+      if (category !== "All Categories") {
+        params.set("category", category);
+      }
+      if (status !== "All Statuses") {
+        params.set("status", status);
+      }
 
       const response = await fetch(
         `${API_URL}/api/complaints/explore?${params.toString()}`
       );
+
       const data = await response.json();
 
       if (!response.ok || data.success !== true) {
-        throw new Error(data.message || "Unable to load complaints.");
+        throw new Error("Unable to load complaints.");
       }
 
       setComplaints(data.complaints || []);
       setTotal(data.total || 0);
       setPages(Math.max(1, data.pages || 1));
+
     } catch (err) {
-      setError(err.message || t.errDefault);
+      setError(
+        err instanceof TypeError ? "errNetwork" : "errDefault"
+      );
       setComplaints([]);
     } finally {
       setLoading(false);
     }
-  }, [page, search, category, status, t.errDefault]);
+  }, [page, search, category, status]);
 
   useEffect(() => {
     loadComplaints();
@@ -224,7 +240,10 @@ function ExploreIssues({ lang = "en" }) {
   };
 
   return (
-    <div className="ge-page" lang={lang}>
+    <div
+      className={`ge-page ${currentLang === "hi" ? "ge-hindi-page" : ""}`}
+      lang={currentLang}
+    >
       <div className="ge-tricolour" aria-hidden="true">
         <i />
         <i />
@@ -237,6 +256,7 @@ function ExploreIssues({ lang = "en" }) {
             <Link to="/">
               <Home size={14} /> {t.home}
             </Link>
+
             <ChevronRight size={14} />
             <span aria-current="page">{t.crumb}</span>
           </nav>
@@ -250,6 +270,7 @@ function ExploreIssues({ lang = "en" }) {
               <strong>{loading ? "—" : total}</strong>
               <span>{t.matching}</span>
             </div>
+
             <div>
               <strong>{categories.length - 1}</strong>
               <span>{t.cats}</span>
@@ -266,6 +287,7 @@ function ExploreIssues({ lang = "en" }) {
 
           <div className="ge-search">
             <Search size={19} />
+
             <input
               type="search"
               value={search}
@@ -279,6 +301,7 @@ function ExploreIssues({ lang = "en" }) {
           <div className="ge-filter-row">
             <label className="ge-select">
               <span>{t.category}</span>
+
               <select
                 value={category}
                 onChange={(e) => updateFilter(setCategory, e.target.value)}
@@ -293,6 +316,7 @@ function ExploreIssues({ lang = "en" }) {
 
             <label className="ge-select">
               <span>{t.status}</span>
+
               <select
                 value={status}
                 onChange={(e) => updateFilter(setStatus, e.target.value)}
@@ -305,7 +329,11 @@ function ExploreIssues({ lang = "en" }) {
               </select>
             </label>
 
-            <button className="ge-reset" type="button" onClick={resetFilters}>
+            <button
+              className="ge-reset"
+              type="button"
+              onClick={resetFilters}
+            >
               <RefreshCw size={15} /> {t.reset}
             </button>
           </div>
@@ -314,17 +342,28 @@ function ExploreIssues({ lang = "en" }) {
         <div className="ge-results-head">
           <div>
             <h2>{t.listTitle}</h2>
-            <p aria-live="polite">{loading ? t.fetching : t.found(total)}</p>
+            <p aria-live="polite">
+              {loading ? t.fetching : t.found(total)}
+            </p>
           </div>
+
           <span className="ge-live">
             <Radio size={14} /> {t.live}
           </span>
         </div>
 
         {loading ? (
-          <div className="ge-grid" role="status" aria-label={t.loading}>
+          <div
+            className="ge-grid"
+            role="status"
+            aria-label={t.loading}
+          >
             {[0, 1, 2, 3, 4, 5].map((n) => (
-              <div className="ge-card ge-skeleton" key={n} aria-hidden="true">
+              <div
+                className="ge-card ge-skeleton"
+                key={n}
+                aria-hidden="true"
+              >
                 <i className="ge-sk-line ge-sk-short" />
                 <i className="ge-sk-img" />
                 <i className="ge-sk-line" />
@@ -337,8 +376,10 @@ function ExploreIssues({ lang = "en" }) {
             <span className="ge-state-icon">
               <AlertCircle size={28} />
             </span>
+
             <h3>{t.errTitle}</h3>
-            <p>{error}</p>
+            <p>{t[error]}</p>
+
             <button type="button" onClick={loadComplaints}>
               <RefreshCw size={16} /> {t.retry}
             </button>
@@ -348,8 +389,10 @@ function ExploreIssues({ lang = "en" }) {
             <span className="ge-state-icon">
               <FileSearch size={28} />
             </span>
+
             <h3>{t.emptyTitle}</h3>
             <p>{t.emptyText}</p>
+
             <button type="button" onClick={resetFilters}>
               {t.clear}
             </button>
@@ -361,9 +404,12 @@ function ExploreIssues({ lang = "en" }) {
                 const image = complaint.evidence?.find(
                   (item) => item.mediaType === "image"
                 );
+
                 return (
                   <article
-                    className={`ge-card ge-s-${getStatusClass(complaint.status)}`}
+                    className={`ge-card ge-s-${getStatusClass(
+                      complaint.status
+                    )}`}
                     key={complaint._id}
                     style={{ "--i": index }}
                   >
@@ -371,6 +417,7 @@ function ExploreIssues({ lang = "en" }) {
                       <span className="ge-category">
                         {catLabel(complaint.category)}
                       </span>
+
                       <span
                         className={`ge-status status-${getStatusClass(
                           complaint.status
@@ -400,21 +447,29 @@ function ExploreIssues({ lang = "en" }) {
                       </Link>
                     </h3>
 
-                    <p className="ge-desc">{complaint.description}</p>
+                    <p className="ge-desc">
+                      {complaint.description}
+                    </p>
 
                     <div className="ge-location">
                       <MapPin size={15} />
-                      <span>{complaint.location?.address || t.noLocation}</span>
+                      <span>
+                        {complaint.location?.address || t.noLocation}
+                      </span>
                     </div>
 
                     <div className="ge-card-footer">
                       <span>
                         <CalendarDays size={14} />
+
                         {complaint.createdAt
-                          ? new Date(complaint.createdAt).toLocaleDateString(
-                              t.locale,
-                              { day: "numeric", month: "short", year: "numeric" }
-                            )
+                          ? new Date(
+                              complaint.createdAt
+                            ).toLocaleDateString(t.locale, {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })
                           : t.noDate}
                       </span>
 
