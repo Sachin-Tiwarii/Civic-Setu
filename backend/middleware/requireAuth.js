@@ -13,7 +13,10 @@ export const requireAuth = async (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
 
     const user = await User.findById(decoded.userId);
 
@@ -26,7 +29,7 @@ export const requireAuth = async (req, res, next) => {
 
     req.user = user;
     next();
-  } catch {
+  } catch (error) {
     return res.status(401).json({
       success: false,
       message: "Invalid or expired session. Please log in again.",
