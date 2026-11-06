@@ -1,0 +1,13 @@
+
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://civic-setu-backend-23yz.onrender.com/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}
