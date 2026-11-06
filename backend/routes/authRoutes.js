@@ -3,11 +3,15 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import rateLimit from "express-rate-limit";
+
 import User from "../models/User.js";
 import { requireAuth } from "../middleware/requireAuth.js";
 
 const router = Router();
 
+const isProduction = process.env.NODE_ENV === "production";
+
+// Rate limiter
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 10,
@@ -19,17 +23,19 @@ const authLimiter = rateLimit({
   },
 });
 
+// Cookie configuration
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax",
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
   path: "/",
   maxAge: 24 * 60 * 60 * 1000,
 };
 
+// Create JWT
 const createToken = (userId) => {
   if (!process.env.JWT_SECRET) {
-    throw new Error("JWT_SECRET is missing from .env");
+    throw new Error("JWT_SECRET is missing");
   }
 
   return jwt.sign(
@@ -39,6 +45,7 @@ const createToken = (userId) => {
   );
 };
 
+// Public user data
 const publicUser = (user) => ({
   id: user._id,
   name: user.name,
@@ -87,7 +94,9 @@ router.post("/register", authLimiter, async (req, res) => {
       });
     }
 
-    const existingUser = await User.findOne({ email: cleanEmail });
+    const existingUser = await User.findOne({
+      email: cleanEmail,
+    });
 
     if (existingUser) {
       return res.status(409).json({
@@ -98,7 +107,6 @@ router.post("/register", authLimiter, async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Public registration always creates a citizen account.
     const user = await User.create({
       name: cleanName,
       email: cleanEmail,
@@ -184,7 +192,7 @@ router.post("/login", authLimiter, async (req, res) => {
 
 // CURRENT USER
 router.get("/me", requireAuth, (req, res) => {
-  res.json({
+  return res.json({
     success: true,
     user: publicUser(req.user),
   });
@@ -194,12 +202,12 @@ router.get("/me", requireAuth, (req, res) => {
 router.post("/logout", (req, res) => {
   res.clearCookie("accessToken", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     path: "/",
   });
 
-  res.json({
+  return res.json({
     success: true,
     message: "Logged out successfully.",
   });
