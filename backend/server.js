@@ -15,6 +15,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust the Render reverse proxy.
+// This allows Express rate-limit to identify the original client IP.
+app.set("trust proxy", 1);
+
 const allowedOrigins = [
   "http://localhost:5173",
   process.env.CLIENT_URL,
@@ -40,6 +44,7 @@ app.use(
 
 // Body and cookie parsing
 app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Health checks
