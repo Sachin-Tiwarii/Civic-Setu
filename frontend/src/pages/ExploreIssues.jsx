@@ -17,7 +17,9 @@ import {
 } from "lucide-react";
 import "./ExploreIssues.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.DEV
+  ? "http://localhost:5000"
+  : "";
 
 /* Values are sent to the API, so they stay in English. Only labels are translated. */
 const categories = [
