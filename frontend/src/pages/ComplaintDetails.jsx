@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "./ComplaintDetails.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.DEV
+  ? "http://localhost:5000"
+  : "";
 
 const statusSteps = [
   "Submitted",
