@@ -15,22 +15,34 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
 // Security middleware
 app.use(helmet());
 
-// Allow the frontend to send authentication cookies
+// CORS configuration
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Allow requests without an Origin header, such as health checks.
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
 
-// Parse incoming request bodies and cookies
+// Body and cookie parsing
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 
-// Health check
+// Health checks
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -50,13 +62,13 @@ app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/admin", adminRoutes);
 
-// Start server only after connecting to MongoDB
+// Start server after MongoDB connects
 const startServer = async () => {
   try {
     await connectDB();
 
-    app.listen(PORT, () => {
-      console.log(`CivicSetu API running at http://localhost:${PORT}`);
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`CivicSetu API running on port ${PORT}`);
     });
   } catch (error) {
     console.error("Failed to start CivicSetu:", error.message);
