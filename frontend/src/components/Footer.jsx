@@ -136,4 +136,3 @@ export default function Footer({ lang = "en" }) {
     </footer>
   );
 }
-
