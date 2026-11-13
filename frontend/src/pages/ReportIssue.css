@@ -56,10 +56,9 @@
 
 /* ---------- Layout ---------- */
 .report-container {
-  width: 100%;
-  max-width: none;
+  width: min(100% - 48px, 1320px);
   margin: 0 auto;
-  padding: 18px 24px 48px;
+  padding: 30px 0 56px;
 }
 
 .report-header {
@@ -473,7 +472,7 @@
 }
 
 @media (max-width: 650px) {
-  .report-container { padding: 18px 14px 38px; }
+  .report-container { width: calc(100% - 28px); padding: 22px 0 38px; }
   .report-header { margin-bottom: 18px; }
   .process-strip { padding: 16px 14px; }
   .process-list { grid-template-columns: minmax(0, 1fr); gap: 10px; }
@@ -498,7 +497,6 @@
 }
 
 @media (min-width: 1100px) {
-  .report-container { padding-left: 40px; padding-right: 40px; }
   .issue-map { height: 420px; }
 }
 
