@@ -503,3 +503,134 @@
 @media (prefers-reduced-motion: reduce) {
   .report-page * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
+
+/* ---------- Address autocomplete ---------- */
+.address-autocomplete {
+  position: relative;
+  width: 100%;
+}
+
+.address-autocomplete input {
+  width: 100%;
+}
+
+.address-search-status {
+  display: block;
+  margin-top: 6px;
+  color: #4b5563;
+  font-size: 12px;
+}
+
+.address-suggestions {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  max-height: 280px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #c9d1dc;
+  border-radius: 5px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+}
+
+.address-suggestion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  border-bottom: 1px solid #edf0f4;
+  background: #fff;
+  color: #1f2933;
+  text-align: left;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.address-suggestion:hover,
+.address-suggestion:focus-visible {
+  background: #f1f5fb;
+}
+
+.address-suggestion-icon {
+  flex-shrink: 0;
+  color: #1b3a6b;
+  font-size: 20px;
+}
+
+.address-attribution {
+  padding: 8px 12px;
+  color: #6b7280;
+  font-size: 11px;
+  text-align: right;
+}
+
+.address-autocomplete {
+  position: relative;
+  width: 100%;
+}
+
+.address-autocomplete input {
+  width: 100%;
+}
+
+.address-loading {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #777;
+}
+
+.address-suggestions {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  list-style: none;
+  padding: 5px;
+  margin: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.address-suggestions li {
+  margin: 0;
+  padding: 0;
+}
+
+.address-suggestions button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  padding: 11px 12px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: #222;
+  text-align: left;
+  cursor: pointer;
+}
+
+.address-suggestions button:hover {
+  background: #f1f5f2;
+}
+
+.suggestion-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.suggestion-country {
+  font-size: 12px;
+  color: #777;
+}
