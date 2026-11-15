@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import LocationPicker from "../components/LocationPicker";
+import AddressAutocomplete from "../components/AddressAutocomplete";
 import "./ReportIssue.css";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -473,9 +474,8 @@ export default function ReportIssue({ lang = "en" }) {
 
   return (
     <div
-      className={`report-page ${
-        currentLang === "hi" ? "report-hindi-page" : ""
-      }`}
+      className={`report-page ${currentLang === "hi" ? "report-hindi-page" : ""
+        }`}
       lang={currentLang}
     >
       <a href="#main-content" className="gov-skip">
@@ -618,16 +618,20 @@ export default function ReportIssue({ lang = "en" }) {
                     <label htmlFor="address">
                       {t.fullAddress} <span className="req">*</span>
                     </label>
-                    <input
-                      id="address"
-                      name="address"
+                    <AddressAutocomplete
                       value={form.address}
-                      onChange={updateField}
-                      placeholder={t.addressPlaceholder}
-                      minLength={3}
-                      maxLength={300}
-                      required
-                      aria-required="true"
+                      lang={currentLang}
+                      placeholder="Enter your issue address"
+                      onSelect={(location) => {
+                        setForm((prev) => ({
+                          ...prev,
+                          address: location.label,
+                        }));
+
+                        if (location.coordinates) {
+                          setCoordinates(location.coordinates);
+                        }
+                      }}
                     />
                   </div>
 
