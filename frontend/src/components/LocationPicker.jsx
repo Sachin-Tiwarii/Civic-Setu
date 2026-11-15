@@ -1,9 +1,10 @@
 
-import { useState } from "react";
+import { useEffect } from "react";
 import {
   MapContainer,
   TileLayer,
   Marker,
+  useMap,
   useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
@@ -11,14 +12,22 @@ import "leaflet/dist/leaflet.css";
 
 const defaultPosition = [22.7196, 75.8577]; // Indore
 
+// Approximate geographical bounds of India.
+const indiaBounds = [
+  [6.5, 68.0],
+  [37.5, 97.5],
+];
+
 const text = {
   en: {
-    locationHint: "Click anywhere on the map to mark the issue location.",
+    locationHint:
+      "Click anywhere on the map to mark the issue location.",
     latitude: "Latitude",
     longitude: "Longitude",
   },
   hi: {
-    locationHint: "समस्या का स्थान चुनने के लिए मैप पर कहीं भी क्लिक करें।",
+    locationHint:
+      "समस्या का स्थान चुनने के लिए मैप पर कहीं भी क्लिक करें।",
     latitude: "अक्षांश",
     longitude: "देशांतर",
   },
@@ -35,6 +44,30 @@ const markerIcon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
+// Approximate India bounds validation.
+function isInsideIndia([lat, lng]) {
+  return (
+    lat >= 6.5 &&
+    lat <= 37.5 &&
+    lng >= 68.0 &&
+    lng <= 97.5
+  );
+}
+
+// Moves the map whenever the selected address changes.
+function MapPositionUpdater({ position }) {
+  const map = useMap();
+
+  useEffect(() => {
+    map.setView(position, map.getZoom(), {
+      animate: true,
+    });
+  }, [map, position[0], position[1]]);
+
+  return null;
+}
+
+// Handles clicks on the map.
 function MapClickHandler({ onLocationSelect }) {
   useMapEvents({
     click(event) {
@@ -56,12 +89,13 @@ export default function LocationPicker({
   const currentLang = lang === "hi" ? "hi" : "en";
   const t = text[currentLang];
 
-  const [mapPosition, setMapPosition] = useState(
-    position || defaultPosition
-  );
+  const mapPosition = position || defaultPosition;
 
   function selectLocation(nextPosition) {
-    setMapPosition(nextPosition);
+    if (!isInsideIndia(nextPosition)) {
+      return;
+    }
+
     onChange(nextPosition);
   }
 
@@ -73,7 +107,10 @@ export default function LocationPicker({
 
       <MapContainer
         center={mapPosition}
-        zoom={14}
+        zoom={5}
+        minZoom={4}
+        maxBounds={indiaBounds}
+        maxBoundsViscosity={1.0}
         scrollWheelZoom
         className="issue-map"
       >
@@ -81,6 +118,8 @@ export default function LocationPicker({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
+        <MapPositionUpdater position={mapPosition} />
 
         <MapClickHandler
           onLocationSelect={selectLocation}
@@ -102,7 +141,7 @@ export default function LocationPicker({
       </MapContainer>
 
       <p className="coordinates-text">
-        {t.latitude}: {mapPosition[0].toFixed(6)} ·
+        {t.latitude}: {mapPosition[0].toFixed(6)} ·{" "}
         {t.longitude}: {mapPosition[1].toFixed(6)}
       </p>
     </div>
